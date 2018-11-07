@@ -1,0 +1,7 @@
+C:\Users\rruba\source\repos\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\bin\Debug\ConsoleAppPongFinalProject.exe.config
+C:\Users\rruba\source\repos\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\bin\Debug\ConsoleAppPongFinalProject.exe
+C:\Users\rruba\source\repos\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\bin\Debug\ConsoleAppPongFinalProject.pdb
+C:\Users\rruba\source\repos\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\obj\Debug\ConsoleAppPongFinalProject.csprojAssemblyReference.cache
+C:\Users\rruba\source\repos\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\obj\Debug\ConsoleAppPongFinalProject.csproj.CoreCompileInputs.cache
+C:\Users\rruba\source\repos\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\obj\Debug\ConsoleAppPongFinalProject.exe
+C:\Users\rruba\source\repos\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\obj\Debug\ConsoleAppPongFinalProject.pdb
