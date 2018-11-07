@@ -22,16 +22,12 @@ current date: 07-NOV-18
 C# :v:
 
 ## Screenshots
-![Screenshot](Pong - gameplay.png)
-
-![Screenshot](Pong - Main Menu.png)
 
 
 ## Tech/Framework used
 Visual Studio 2017 :boom:
 
 ## Code Example
-![Screenshot](Pong - code example.png)
 
 ## Credits
 A huge thank to © [ShayRubach](https://github.com/ShayRubach) :point_left: who helped me a lot!
