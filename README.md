@@ -29,7 +29,7 @@ C# :v:
 ![pong - gameplay](https://user-images.githubusercontent.com/44708223/48136690-f229aa00-e2a8-11e8-88ec-1c3eca61ce5f.png)
 
 ## Tech/Framework used
-Visual Studio 2017 :boom:
+Visual Studio 2017 - ConsoleApp (.NET Framework) :boom:
 
 ## Code Example
 ![pong - code example](https://user-images.githubusercontent.com/44708223/48136689-f229aa00-e2a8-11e8-8856-72dc55dc2fbf.png)
