@@ -22,9 +22,10 @@ current date: 07-NOV-18
 C# :v:
 
 ## Screenshots
+![Screenshot](Pong - gameplay.png)
+
 ![Screenshot](Pong - Main Menu.png)
 
-![Screenshot](Pong - gameplay.png)
 
 ## Tech/Framework used
 Visual Studio 2017 :boom:
