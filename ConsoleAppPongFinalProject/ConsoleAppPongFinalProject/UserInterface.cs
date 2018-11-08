@@ -24,9 +24,8 @@ namespace ConsoleAppPongFinalProject
         /// </summary>
         /// <param name="userChoice"></param>
         /// <returns></returns>
-        public int MainMenu(ref int userChoice)
+        public void MainMenu(ref UserChoice userChoice)
         {
-            userChoice = 0;
             topForCursorIcon = 3;
             bool isPressed = false;
             Console.Clear();
@@ -64,26 +63,26 @@ namespace ConsoleAppPongFinalProject
                     case ConsoleKey.Enter:
                         switch (topForCursorIcon)
                         {
-                            //User choosed to play the 1Player.
+                            //User has chosen to play the 1Player.
                             case 9:
                                 instructions.ClearsTheBoard();
                                 player1 = instructions.SetsPlayerName(1);
                                 instructions.Prints1PlayerInstructions(player1);
                                 PrintsPressToStart();
-                                userChoice = 1;
+                                userChoice = UserChoice.SinglePlayer;
                                 isPressed = true;
                                 break;
-                            //User choosed to play the 2Players.
+                            //User has chosen to play the 2Players.
                             case 15:
                                 instructions.ClearsTheBoard();
                                 //player1 = instructions.SetsPlayerName(1);
                                 //player2 = instructions.SetsPlayerName(2);
                                 //instructions.Prints2PlayersInstructions(player1, player2);
                                 //PrintsPressToStart();
-                                userChoice = 2;
+                                userChoice = UserChoice.MultiPlayer;
                                 isPressed = true;
                                 break;
-                            //User choosed to view the high score.
+                            //User has chosen to view the high score.
                             case 21:
                                 highscore.PrintsHighscoreAsTitle();
                                 highscore.HighscoreReader();
@@ -102,7 +101,6 @@ namespace ConsoleAppPongFinalProject
                 }
 
             } while (!isPressed);
-            return userChoice;
         }
 
         private void CursorLook(ref int leftForCursor, ref int topForCursor)
