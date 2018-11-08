@@ -18,7 +18,7 @@ namespace ConsoleAppPongFinalProject
         private char[,] gameField;
         private const int fieldHight = 23;
         private const int fieldWidth = 90;
-        private const int gameOver = 1;
+        private const int gameOver = 5;
         private bool isGameOver = false;
         private int manualGoalCount, autoGoalCount;
 
@@ -179,7 +179,6 @@ namespace ConsoleAppPongFinalProject
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.SetCursorPosition(30, 16);
                         Console.WriteLine(userInterface.player1 + ", good luck next time.");
-                        highscore.HighscoreWriter(userInterface.player1, manualGoalCount, autoGoalCount);
                         break;
                     }
                 }

@@ -33,10 +33,7 @@ namespace ConsoleAppPongFinalProject
             string winningTime = DateTime.Now.ToString("HH:mm_dd-MM-yyyy");
             using (StreamWriter highscoreFile = new StreamWriter(pathString, true))
             {
-                if (manualGoalCount > autoGoalCount)
-                {
-                    highscoreFile.WriteLine('-' + playerName + "- has beated the Computer for: " + manualGoalCount + " to " + autoGoalCount + " - " + winningTime);
-                }
+                highscoreFile.WriteLine('-' + playerName + "- has beated the Computer for: " + manualGoalCount + " to " + autoGoalCount + " - " + winningTime);
             }
         }
 
