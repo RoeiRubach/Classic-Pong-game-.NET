@@ -21,18 +21,23 @@ current date: 07-NOV-18
 ```
 
 ## Code style
+
 C# :v:
 
 ## Screenshots
+
 ![pong - main menu](https://user-images.githubusercontent.com/44708223/48136691-f229aa00-e2a8-11e8-94f5-d17a298d644e.png)
 
 ![pong - gameplay](https://user-images.githubusercontent.com/44708223/48136690-f229aa00-e2a8-11e8-88ec-1c3eca61ce5f.png)
 
 ## Tech/Framework used
+
 Visual Studio 2017 - ConsoleApp (.NET Framework) :boom:
 
 ## Code Example
-![pong - code example](https://user-images.githubusercontent.com/44708223/48136689-f229aa00-e2a8-11e8-8856-72dc55dc2fbf.png)
+
+![pong - code example](https://user-images.githubusercontent.com/44708223/48219493-52961580-e395-11e8-8e46-243175bda4dc.png)
 
 ## Credits
+
 A huge thank to © [ShayRubach](https://github.com/ShayRubach) :point_left: who helped me a lot!
