@@ -10,14 +10,14 @@ We had different options between which project to choose, I guess I was choosing
 
 ## Build status
 
-The game currently has 2 out of 3 options:
+The game currently has 3 options:
 - [x] 1 Player.
-- [ ] 2 Players.
+- [x] 2 Players.
 - [x] High score.
 
-Will update when the new feature will be ready.
+Everything is working and ready to play.
 ```
-current date: 07-NOV-18
+current date: 09-NOV-18
 ```
 
 ## Code style
@@ -36,7 +36,7 @@ Visual Studio 2017 - ConsoleApp (.NET Framework) :boom:
 
 ## Code Example
 
-![pong - code example](https://user-images.githubusercontent.com/44708223/48219493-52961580-e395-11e8-8e46-243175bda4dc.png)
+![pong - code example](https://user-images.githubusercontent.com/44708223/48276087-d57ba680-e44f-11e8-9390-ca20f15a4c20.png)
 
 ## Credits
 
