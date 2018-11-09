@@ -28,12 +28,30 @@ namespace ConsoleAppPongFinalProject
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public void HighscoreWriter(string playerName, int manualGoalCount, int autoGoalCount)
+        //First player aginst the computer writer.
+        public void HighscoreWriter(string playerName, int firstPlayerGoalCount, int autoGoalCount)
         {
             string winningTime = DateTime.Now.ToString("HH:mm_dd-MM-yyyy");
             using (StreamWriter highscoreFile = new StreamWriter(pathString, true))
             {
-                highscoreFile.WriteLine('-' + playerName + "- has beated the Computer for: " + manualGoalCount + " to " + autoGoalCount + " - " + winningTime);
+                highscoreFile.WriteLine('-' + playerName + "- has beated the Computer for: " + firstPlayerGoalCount + " to " + autoGoalCount + " - " + winningTime);
+            }
+        }
+
+        //First player aginst the second player writer.
+        public void HighscoreWriter(string firstPlayerName, string secondPlayerName ,int firstPlayerGoalCount, int secondPlayerGoalCount)
+        {
+            string winningTime = DateTime.Now.ToString("HH:mm_dd-MM-yyyy");
+            using (StreamWriter highscoreFile = new StreamWriter(pathString, true))
+            {
+                if (firstPlayerGoalCount > secondPlayerGoalCount)
+                {
+                    highscoreFile.WriteLine('-' + firstPlayerName + "- has beated -" + secondPlayerName + "- for: " + firstPlayerGoalCount + " to " + secondPlayerGoalCount + " - " + winningTime);
+                }
+                else
+                {
+                    highscoreFile.WriteLine('-' + secondPlayerName + "- has beated -" + firstPlayerName + "- for: " + firstPlayerGoalCount + " to " + secondPlayerGoalCount + " - " + winningTime);
+                }
             }
         }
 

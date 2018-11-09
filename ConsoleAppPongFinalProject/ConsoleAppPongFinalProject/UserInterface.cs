@@ -75,10 +75,10 @@ namespace ConsoleAppPongFinalProject
                             //User has chosen to play the 2Players.
                             case 15:
                                 instructions.ClearsTheBoard();
-                                //player1 = instructions.SetsPlayerName(1);
-                                //player2 = instructions.SetsPlayerName(2);
-                                //instructions.Prints2PlayersInstructions(player1, player2);
-                                //PrintsPressToStart();
+                                player1 = instructions.SetsPlayerName(1);
+                                player2 = instructions.SetsPlayerName(2);
+                                instructions.Prints2PlayersInstructions(player1, player2);
+                                PrintsPressToStart();
                                 userChoice = UserChoice.MultiPlayer;
                                 isPressed = true;
                                 break;
