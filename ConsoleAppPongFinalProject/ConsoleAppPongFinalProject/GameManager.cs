@@ -18,7 +18,7 @@ namespace ConsoleAppPongFinalProject
         private char[,] gameField;
         private const int fieldHight = 23;
         private const int fieldWidth = 90;
-        private const int gameOver = 1;
+        private const int gameOver = 5;
         private bool isGoal = false;
         private bool isGameOver = false;
         private bool isFirstPlayer = false;
@@ -31,8 +31,8 @@ namespace ConsoleAppPongFinalProject
         Scoreboard scoreboard = new Scoreboard();
         Board board = new Board();
         Ball ball = new Ball((fieldWidth / 2), (fieldHight / 2));
-        AutoPlayer autoPlayer;
         FirstPlayer firstPlayer = new FirstPlayer(2, ((fieldHight / 2) - 2));
+        AutoPlayer autoPlayer;
         SecondPlayer secondPlayer;
         Highscore highscore = new Highscore();
 
@@ -52,8 +52,6 @@ namespace ConsoleAppPongFinalProject
             firstPlayerGoalCount = 0;
 
             GetUserChoice();
-            StartManualPlayerLoop();
-            IsGameRestart();
         }
 
         private void GetUserChoice()
@@ -69,18 +67,60 @@ namespace ConsoleAppPongFinalProject
                     autoPlayer.SetsTheAutoPlayerPosition(gameField);
                     Thread mySingleWorker = new Thread(ThreadFunctionForTheBall_AutoPlayer);
                     mySingleWorker.Start();
+                    StartSinglePlayerLoop();
                     break;
-                case UserChoice.MultiPlayer:
+                case UserChoice.MultiPlayers:
+                    isMultiPlayers = true;
                     secondPlayerGoalCount = 0;
                     secondPlayer = new SecondPlayer((fieldWidth - 3), ((fieldHight / 2) - 2));
                     secondPlayer.SetsTheSecondPlayerPosition(gameField);
                     Thread myMultiWorker = new Thread(ThreadFunctionForTheBall);
                     myMultiWorker.Start();
+                    StartMultiPlayerLoop();
                     break;
             }
         }
 
-        private void StartManualPlayerLoop()
+        private void StartSinglePlayerLoop()
+        {
+            do
+            {
+                ConsoleKeyInfo key = Console.ReadKey(true);
+                switch (key.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        //Checks if the FirstPlayer gets out the border.
+                        if (gameField[firstPlayer.yAxis - 1, firstPlayer.xAxis] != GameManager.topBottomEdge)
+                        {
+                            firstPlayer.yAxis--;
+                            gameField[firstPlayer.yAxis + 5, firstPlayer.xAxis] = ' ';
+                        }
+                        firstPlayer.SetsTheFirstPlayerPosition(gameField);
+                        break;
+                    case ConsoleKey.DownArrow:
+                        //Checks if the FirstPlayer gets out the border.
+                        if (gameField[firstPlayer.yAxis + 5, firstPlayer.xAxis] != GameManager.topBottomEdge)
+                        {
+                            firstPlayer.yAxis++;
+                            gameField[firstPlayer.yAxis - 1, firstPlayer.xAxis] = ' ';
+                        }
+                        firstPlayer.SetsTheFirstPlayerPosition(gameField);
+                        break;
+                    default:
+                        //Checks if the game has ended.
+                        if ((firstPlayerGoalCount == gameOver) || (autoGoalCount == gameOver) || (secondPlayerGoalCount == gameOver))
+                        {
+                            Console.SetCursorPosition(0, 28);
+                            Console.WriteLine("Press any key to continue..");
+                            Console.ReadKey(true);
+                        }
+                        break;
+                }
+
+            } while (!isGameOver);
+        }
+
+        private void StartMultiPlayerLoop()
         {
             do
             {
@@ -168,7 +208,6 @@ namespace ConsoleAppPongFinalProject
             isFirstPlayer = false;
             isOtherPlayer = false;
             isGoal = false;
-            isGameOver = false;
             char temp = emptyPixel;
             int ballXDiraction = 1, ballYDiraction = 0;
             //First score for the manual player.
@@ -240,8 +279,6 @@ namespace ConsoleAppPongFinalProject
             isFirstPlayer = false;
             isOtherPlayer = false;
             isGoal = false;
-            isGameOver = false;
-            isMultiPlayers = true;
             char temp = emptyPixel;
             int ballXDiraction = 1, ballYDiraction = 0;
             //First score for the first player.
@@ -525,7 +562,7 @@ namespace ConsoleAppPongFinalProject
         }
 
         //Creates a switch statement in a Do-While loop to set the isRestarting boolean.
-        private void IsGameRestart()
+        public bool IsGameRestart()
         {
             GameStatus gameStatus = GameStatus.None;
             Console.CursorVisible = true;
@@ -535,16 +572,16 @@ namespace ConsoleAppPongFinalProject
             switch (gameStatus)
             {
                 case GameStatus.Restart:
-                    Console.Clear();
-                    Start();
+                    isGameOver = false;
                     break;
                 case GameStatus.End:
                     Console.SetCursorPosition(28, 10);
                     Console.WriteLine("Thank you for playing. Goodbye.");
+                    isGameOver = true;
                     Console.ReadKey();
-                    Environment.Exit(0);
                     break;
             }
+            return isGameOver;
         }
 
         private int GetsTheUserOption()

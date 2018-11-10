@@ -10,7 +10,7 @@ namespace ConsoleAppPongFinalProject
     {
         None,
         SinglePlayer,
-        MultiPlayer
+        MultiPlayers
     }
 
     enum CollidedWithBall

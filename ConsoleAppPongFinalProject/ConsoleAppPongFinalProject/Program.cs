@@ -10,8 +10,12 @@ namespace ConsoleAppPongFinalProject
     {
         static void Main(string[] args)
         {
-            GameManager game = new GameManager();
-            game.Start();
+            GameManager game;
+            do
+            {
+                game = new GameManager();
+                game.Start();
+            } while (!game.IsGameRestart());
         }
     }
 }

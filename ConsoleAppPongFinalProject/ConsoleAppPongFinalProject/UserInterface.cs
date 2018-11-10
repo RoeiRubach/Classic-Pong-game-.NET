@@ -79,7 +79,7 @@ namespace ConsoleAppPongFinalProject
                                 player2 = instructions.SetsPlayerName(2);
                                 instructions.Prints2PlayersInstructions(player1, player2);
                                 PrintsPressToStart();
-                                userChoice = UserChoice.MultiPlayer;
+                                userChoice = UserChoice.MultiPlayers;
                                 isPressed = true;
                                 break;
                             //User has chosen to view the high score.
