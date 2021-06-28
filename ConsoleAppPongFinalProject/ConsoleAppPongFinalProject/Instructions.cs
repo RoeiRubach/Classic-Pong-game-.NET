@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleAppPongFinalProject
 {
-    class Instructions
+    public class Instructions
     {
-        public void ClearsTheBoard()
+        public void ClearBoard()
         {
             for (int i = 0; i < 33; i++)
             {
@@ -20,45 +16,45 @@ namespace ConsoleAppPongFinalProject
             }
         }
 
-        public void Prints1PlayerInstructions(string player)
+        public void PrintPlayerOneInstructions(string player)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
-            PrintsPlayer1Controls(player);
-            PrintsScoreInstruction();
+            PrintPlayerOneControls(player);
+            PrintScoreInstruction();
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public void Prints2PlayersInstructions(string player1, string player2)
+        public void PrintPlayerTwoInstructions(string playerOne, string playerTwo)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
-            PrintsPlayer1Controls(player1);
-            PrintsPlayer2Controls(player2);
-            PrintsScoreInstruction();
+            PrintPlayerOneControls(playerOne);
+            PrintPlayerTwoControls(playerTwo);
+            PrintScoreInstruction();
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        private string PrintsPlayer1Controls(string player1)
+        private string PrintPlayerOneControls(string playerOne)
         {
             Console.SetCursorPosition(3, 7);
-            Console.WriteLine(player1 + ": ");
+            Console.WriteLine(playerOne + ": ");
             Console.SetCursorPosition(6, 8);
             Console.WriteLine("Controls the paddle on the left hand side of the screen using your keyboard.");
             Console.SetCursorPosition(6, 9);
             Console.WriteLine("Use -UpArrow- to move the paddle up and -DownArrow- to move the paddle down.");
-            return player1;
+            return playerOne;
         }
 
-        private void PrintsPlayer2Controls(string player2)
+        private void PrintPlayerTwoControls(string playerTwo)
         {
             Console.SetCursorPosition(3, 11);
-            Console.WriteLine(player2 + ": ");
+            Console.WriteLine(playerTwo + ": ");
             Console.SetCursorPosition(6, 12);
             Console.WriteLine("Controls the paddle on the Right hand side of the screen using your keyboard.");
             Console.SetCursorPosition(6, 13);
             Console.WriteLine("Use -W- to move the paddle up and -S- to move the paddle down.");
         }
 
-        private void PrintsScoreInstruction()
+        private void PrintScoreInstruction()
         {
             Console.SetCursorPosition(16,15);
             Console.WriteLine("Points are scored when your opponent misses the ball.");
@@ -66,7 +62,7 @@ namespace ConsoleAppPongFinalProject
             Console.WriteLine("First player to reach 5 points wins the game.");
         }
 
-        public string SetsPlayerName(int whichPlayer)
+        public string SetPlayerName(int whichPlayer)
         {
             //Gets an integer to set a string value to player 1/2 with a switch statement and returns it.
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -75,16 +71,16 @@ namespace ConsoleAppPongFinalProject
             switch (whichPlayer)
             {
                 case 1:
-                    Console.Write("Enter -player1's- name: ");
+                    Console.Write("Enter -first player- name: ");
                     break;
                 case 2:
-                    Console.Write("Enter -player2's- name: ");
+                    Console.Write("Enter -second player- name: ");
                     break;
                 default:
                     break;
             }
             playerName = Console.ReadLine();
-            ClearsTheBoard();
+            ClearBoard();
             Console.ForegroundColor = ConsoleColor.White;
             return playerName;
         }

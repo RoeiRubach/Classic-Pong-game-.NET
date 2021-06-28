@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleAppPongFinalProject
 {
     class UserInterface
     {
-        private const int leftForSetCursor = 28;
-        private int leftForCursorIcon = 22, topForCursorIcon;
-        public string player1 { get; set; }
-        public string player2 { get; set; }
+        private const int LEFT_SET_CURSOR = 28;
+        public string PlayerOne { get; set; }
+        public string PlayerTwo { get; set; }
 
-        Instructions instructions = new Instructions();
-        Highscore highscore = new Highscore();
+        private Instructions _instructions = new Instructions();
+        private Highscore _highscore = new Highscore();
+        private int _leftForCursorIcon = 22, _topForCursorIcon;
 
         /// <summary>
         /// A method that controls the UI -Main Menu- and returns the user choice.
@@ -26,7 +22,7 @@ namespace ConsoleAppPongFinalProject
         /// <returns></returns>
         public void MainMenu(ref UserChoice userChoice)
         {
-            topForCursorIcon = 3;
+            _topForCursorIcon = 3;
             bool isPressed = false;
             Console.Clear();
 
@@ -45,47 +41,47 @@ namespace ConsoleAppPongFinalProject
                 {
                     //Controls the cursor location.
                     case ConsoleKey.UpArrow:
-                        if (topForCursorIcon > 9)
+                        if (_topForCursorIcon > 9)
                         {
-                            topForCursorIcon -= 6;
-                            CursorLook(ref leftForCursorIcon, ref topForCursorIcon);
+                            _topForCursorIcon -= 6;
+                            CursorLook(ref _leftForCursorIcon, ref _topForCursorIcon);
                         }
                         break;
                     //Controls the cursor location.
                     case ConsoleKey.DownArrow:
-                        if (topForCursorIcon < 21)
+                        if (_topForCursorIcon < 21)
                         {
-                            topForCursorIcon += 6;
-                            CursorLook(ref leftForCursorIcon, ref topForCursorIcon);
+                            _topForCursorIcon += 6;
+                            CursorLook(ref _leftForCursorIcon, ref _topForCursorIcon);
                         }
                         break;
                     //Controls the user chooice.
                     case ConsoleKey.Enter:
-                        switch (topForCursorIcon)
+                        switch (_topForCursorIcon)
                         {
                             //User has chosen to play the 1Player.
                             case 9:
-                                instructions.ClearsTheBoard();
-                                player1 = instructions.SetsPlayerName(1);
-                                instructions.Prints1PlayerInstructions(player1);
+                                _instructions.ClearBoard();
+                                PlayerOne = _instructions.SetPlayerName(1);
+                                _instructions.PrintPlayerOneInstructions(PlayerOne);
                                 PrintsPressToStart();
                                 userChoice = UserChoice.SinglePlayer;
                                 isPressed = true;
                                 break;
                             //User has chosen to play the 2Players.
                             case 15:
-                                instructions.ClearsTheBoard();
-                                player1 = instructions.SetsPlayerName(1);
-                                player2 = instructions.SetsPlayerName(2);
-                                instructions.Prints2PlayersInstructions(player1, player2);
+                                _instructions.ClearBoard();
+                                PlayerOne = _instructions.SetPlayerName(1);
+                                PlayerTwo = _instructions.SetPlayerName(2);
+                                _instructions.PrintPlayerTwoInstructions(PlayerOne, PlayerTwo);
                                 PrintsPressToStart();
                                 userChoice = UserChoice.MultiPlayers;
                                 isPressed = true;
                                 break;
                             //User has chosen to view the high score.
                             case 21:
-                                highscore.PrintsHighscoreAsTitle();
-                                highscore.HighscoreReader();
+                                PrintsHighscoreAsTitle();
+                                _highscore.HighscoreReader();
                                 Console.ReadKey(true);
                                 MainMenu(ref userChoice);
                                 isPressed = true;
@@ -114,49 +110,49 @@ namespace ConsoleAppPongFinalProject
             }
             Console.SetCursorPosition(leftForCursor, topForCursor);
             Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write(GameManager.CursorIcon);
+            Console.Write(CharacterUtilities.CURSOR_ICON);
             Console.ForegroundColor = ConsoleColor.White;
         }
 
         private void Prints1Player()
         {
-            Console.SetCursorPosition(leftForSetCursor, 7);
+            Console.SetCursorPosition(LEFT_SET_CURSOR, 7);
             Console.Write("  _   ___ _                   ");
-            Console.SetCursorPosition(leftForSetCursor, 8);
+            Console.SetCursorPosition(LEFT_SET_CURSOR, 8);
             Console.Write(" / | | _ \\ |__ _ _  _ ___ _ _ ");
-            Console.SetCursorPosition(leftForSetCursor, 9);
+            Console.SetCursorPosition(LEFT_SET_CURSOR, 9);
             Console.Write(" | | |  _/ / _` | || / -_) '_|");
-            Console.SetCursorPosition(leftForSetCursor, 10);
+            Console.SetCursorPosition(LEFT_SET_CURSOR, 10);
             Console.Write(" |_| |_| |_\\__,_|\\_, \\___|_|  ");
-            Console.SetCursorPosition(leftForSetCursor, 11);
+            Console.SetCursorPosition(LEFT_SET_CURSOR, 11);
             Console.WriteLine("                 |__/         ");
         }
 
         private void Prints2Players()
         {
-            Console.SetCursorPosition(leftForSetCursor, 13);
+            Console.SetCursorPosition(LEFT_SET_CURSOR, 13);
             Console.Write("  ___   ___ _                   ");
-            Console.SetCursorPosition(leftForSetCursor, 14);
+            Console.SetCursorPosition(LEFT_SET_CURSOR, 14);
             Console.Write(" |_  ) | _ \\ |__ _ _  _ ___ _ _ ___");
-            Console.SetCursorPosition(leftForSetCursor, 15);
+            Console.SetCursorPosition(LEFT_SET_CURSOR, 15);
             Console.Write("  / /  |  _/ / _` | || / -_) '_(_-<");
-            Console.SetCursorPosition(leftForSetCursor, 16);
+            Console.SetCursorPosition(LEFT_SET_CURSOR, 16);
             Console.Write(" /___| |_| |_\\__,_|\\_, \\___|_| /__/");
-            Console.SetCursorPosition(leftForSetCursor, 17);
+            Console.SetCursorPosition(LEFT_SET_CURSOR, 17);
             Console.WriteLine("                   |__/         ");
         }
 
         private void PrintsHighScores()
         {
-            Console.SetCursorPosition(leftForSetCursor, 19);
+            Console.SetCursorPosition(LEFT_SET_CURSOR, 19);
             Console.Write("  _  _ _      _                       ");
-            Console.SetCursorPosition(leftForSetCursor, 20);
+            Console.SetCursorPosition(LEFT_SET_CURSOR, 20);
             Console.Write(" | || (_)__ _| |_  ___ __ ___ _ _ ___ ");
-            Console.SetCursorPosition(leftForSetCursor, 21);
+            Console.SetCursorPosition(LEFT_SET_CURSOR, 21);
             Console.Write(" | __ | / _` | ' \\(_-</ _/ _ \\ '_/ -_)");
-            Console.SetCursorPosition(leftForSetCursor, 22);
+            Console.SetCursorPosition(LEFT_SET_CURSOR, 22);
             Console.Write(" |_||_|_\\__, |_||_/__/\\__\\___/_| \\___|");
-            Console.SetCursorPosition(leftForSetCursor, 23);
+            Console.SetCursorPosition(LEFT_SET_CURSOR, 23);
             Console.WriteLine("        |___/                         ");
         }
 
@@ -185,6 +181,22 @@ namespace ConsoleAppPongFinalProject
             Console.WriteLine("Use the -UpArrow- and the -DownArrow- keys to navigate or the -Escape- key to exit.");
             Console.SetCursorPosition(0, 28);
             Console.WriteLine("Use the -Enter- key to choose.");
+        }
+        private void PrintsHighscoreAsTitle()
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.SetCursorPosition(29, 0);
+            Console.Write("  _  _ _      _                       ");
+            Console.SetCursorPosition(29, 1);
+            Console.Write(" | || (_)__ _| |_  ___ __ ___ _ _ ___ ");
+            Console.SetCursorPosition(29, 2);
+            Console.Write(" | __ | / _` | ' \\(_-</ _/ _ \\ '_/ -_)");
+            Console.SetCursorPosition(29, 3);
+            Console.Write(" |_||_|_\\__, |_||_/__/\\__\\___/_| \\___|");
+            Console.SetCursorPosition(29, 4);
+            Console.WriteLine("        |___/                         ");
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }

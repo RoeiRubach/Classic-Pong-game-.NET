@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace ConsoleAppPongFinalProject
 {
     class Board
     {
-
-        public void SetsTheBoard(char[,] gameField)
+        public void SetBoard(char[,] gameField)
         {
             for (int i = 0; i < gameField.GetLength(0); i++)
             {
@@ -17,7 +15,7 @@ namespace ConsoleAppPongFinalProject
                 {
                     if (i == 0)
                     {
-                        gameField[i, j] = GameManager.topBottomEdge;
+                        gameField[i, j] = CharacterUtilities.TOP_BOTTOM_EDGE;
                         if (j == 0)
                         {
                             gameField[i, j] = '╔';
@@ -29,7 +27,7 @@ namespace ConsoleAppPongFinalProject
                     }
                     else if (i == gameField.GetLength(0) - 1)
                     {
-                        gameField[i, j] = GameManager.topBottomEdge;
+                        gameField[i, j] = CharacterUtilities.TOP_BOTTOM_EDGE;
                         if (j == 0)
                         {
                             gameField[i, j] = '╚';
@@ -44,7 +42,7 @@ namespace ConsoleAppPongFinalProject
                         gameField[i, j] = ' ';
                         if ((j == 0) || j == gameField.GetLength(1) - 1)
                         {
-                            gameField[i, j] = GameManager.leftRightEdge;
+                            gameField[i, j] = CharacterUtilities.LEFT_RIGHT_EDGE;
                         }
                     }
                 }

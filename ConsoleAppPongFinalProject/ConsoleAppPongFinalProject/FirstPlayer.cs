@@ -1,30 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ConsoleAppPongFinalProject
+﻿namespace ConsoleAppPongFinalProject
 {
     class FirstPlayer
     {
-        public int xAxis { get; set; }
-        public int yAxis { get; set; }
-        private int yDiraction;
+        public int XAxis { get; set; }
+        public int YAxis { get; set; }
+        private int _YDiraction;
 
         public FirstPlayer(int x, int y)
         {
-            xAxis = x;
-            yAxis = y;
+            XAxis = x;
+            YAxis = y;
         }
 
-        public void SetsTheFirstPlayerPosition(char[,] gameField)
+        public void SetFirstPlayerPosition(char[,] gameField)
         {
-            yDiraction = yAxis;
+            _YDiraction = YAxis;
             for (int i = 0; i < 5; i++)
             {
-                gameField[yDiraction, xAxis] = GameManager.playerIcon;
-                yDiraction++;
+                gameField[_YDiraction, XAxis] = CharacterUtilities.PLAYER_ICON;
+                _YDiraction++;
             }
         }
     }
