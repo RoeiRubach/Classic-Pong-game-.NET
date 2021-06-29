@@ -45,7 +45,8 @@
   <ItemGroup>
     <Compile Include="AutoPlayer.cs" />
     <Compile Include="Ball.cs" />
-    <Compile Include="Board.cs" />
+    <Compile Include="BoardManager.cs" />
+    <Compile Include="Border.cs" />
     <Compile Include="CharacterUtilities.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="GameManager.cs" />

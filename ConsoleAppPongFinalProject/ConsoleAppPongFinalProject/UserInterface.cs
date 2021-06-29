@@ -28,11 +28,11 @@ namespace ConsoleAppPongFinalProject
 
             do
             {
-                Prints1Player();
-                Prints2Players();
-                PrintsHighScores();
+                PrintOnePlayer();
+                PrintTwoPlayers();
+                PrintHighScore();
                 Console.ForegroundColor = ConsoleColor.Blue;
-                PrintsTheTitle();
+                PrintPongTitle();
                 Console.ForegroundColor = ConsoleColor.White;
                 MainMenuInstructions();
 
@@ -64,7 +64,7 @@ namespace ConsoleAppPongFinalProject
                                 _instructions.ClearBoard();
                                 PlayerOne = _instructions.SetPlayerName(1);
                                 _instructions.PrintPlayerOneInstructions(PlayerOne);
-                                PrintsPressToStart();
+                                PrintPressToStart();
                                 userChoice = UserChoice.SinglePlayer;
                                 isPressed = true;
                                 break;
@@ -74,13 +74,13 @@ namespace ConsoleAppPongFinalProject
                                 PlayerOne = _instructions.SetPlayerName(1);
                                 PlayerTwo = _instructions.SetPlayerName(2);
                                 _instructions.PrintPlayerTwoInstructions(PlayerOne, PlayerTwo);
-                                PrintsPressToStart();
-                                userChoice = UserChoice.MultiPlayers;
+                                PrintPressToStart();
+                                userChoice = UserChoice.PlayerVSPlayer;
                                 isPressed = true;
                                 break;
                             //User has chosen to view the high score.
                             case 21:
-                                PrintsHighscoreAsTitle();
+                                PrintHighscoreAsTitle();
                                 _highscore.HighscoreReader();
                                 Console.ReadKey(true);
                                 MainMenu(ref userChoice);
@@ -114,7 +114,7 @@ namespace ConsoleAppPongFinalProject
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        private void Prints1Player()
+        private void PrintOnePlayer()
         {
             Console.SetCursorPosition(LEFT_SET_CURSOR, 7);
             Console.Write("  _   ___ _                   ");
@@ -128,7 +128,7 @@ namespace ConsoleAppPongFinalProject
             Console.WriteLine("                 |__/         ");
         }
 
-        private void Prints2Players()
+        private void PrintTwoPlayers()
         {
             Console.SetCursorPosition(LEFT_SET_CURSOR, 13);
             Console.Write("  ___   ___ _                   ");
@@ -142,7 +142,7 @@ namespace ConsoleAppPongFinalProject
             Console.WriteLine("                   |__/         ");
         }
 
-        private void PrintsHighScores()
+        private void PrintHighScore()
         {
             Console.SetCursorPosition(LEFT_SET_CURSOR, 19);
             Console.Write("  _  _ _      _                       ");
@@ -156,7 +156,7 @@ namespace ConsoleAppPongFinalProject
             Console.WriteLine("        |___/                         ");
         }
 
-        public void PrintsTheTitle()
+        public void PrintPongTitle()
         {
             Console.SetCursorPosition(33, 0);
             Console.Write("  ___  ___  _  _  ___ ");
@@ -168,7 +168,7 @@ namespace ConsoleAppPongFinalProject
             Console.WriteLine(" |_|  \\___/|_|\\_|\\___|");
         }
 
-        private void PrintsPressToStart()
+        private void PrintPressToStart()
         {
             Console.SetCursorPosition(0, 20);
             Console.WriteLine("Press anything to -start- and good luck!");
@@ -182,7 +182,7 @@ namespace ConsoleAppPongFinalProject
             Console.SetCursorPosition(0, 28);
             Console.WriteLine("Use the -Enter- key to choose.");
         }
-        private void PrintsHighscoreAsTitle()
+        private void PrintHighscoreAsTitle()
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Blue;

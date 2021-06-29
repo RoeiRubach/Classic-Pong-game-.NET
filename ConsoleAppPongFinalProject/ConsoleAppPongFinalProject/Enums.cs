@@ -4,7 +4,7 @@
     {
         None,
         SinglePlayer,
-        MultiPlayers
+        PlayerVSPlayer
     }
 
     enum CollidedWithBall
