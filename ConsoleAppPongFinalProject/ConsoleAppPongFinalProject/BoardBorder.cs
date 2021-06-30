@@ -1,10 +1,14 @@
 ﻿namespace ConsoleAppPongFinalProject
 {
-    public class Border
+    public class BoardBorder
     {
         private char[,] _gameBoard;
 
-        public Border(char[,] gameBoard) => _gameBoard = gameBoard;
+        public BoardBorder(char[,] gameBoard)
+        {
+            _gameBoard = gameBoard;
+            SetBorder();
+        }
 
         private void SetBorder()
         {
@@ -20,7 +24,7 @@
 
                     else
                     {
-                        _gameBoard[i, j] = CharacterUtilities.EMPTY_CHAR;
+                        _gameBoard[i, j] = CharacterUtilities.EMPTY_PIXEL;
                         HandleLeftRightEdges(i, j);
                     }
                 }

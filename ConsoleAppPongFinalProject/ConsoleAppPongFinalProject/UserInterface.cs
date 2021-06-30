@@ -12,6 +12,18 @@ namespace ConsoleAppPongFinalProject
         private Highscore _highscore = new Highscore();
         private int _leftForCursorIcon = 22, _topForCursorIcon;
 
+        public static void PrintPongTitle()
+        {
+            Console.SetCursorPosition(33, 0);
+            Console.Write("  ___  ___  _  _  ___ ");
+            Console.SetCursorPosition(33, 1);
+            Console.Write(" | _ \\/ _ \\| \\| |/ __|");
+            Console.SetCursorPosition(33, 2);
+            Console.Write(" |  _/ (_) | .` | (_ |");
+            Console.SetCursorPosition(33, 3);
+            Console.WriteLine(" |_|  \\___/|_|\\_|\\___|");
+        }
+
         /// <summary>
         /// A method that controls the UI -Main Menu- and returns the user choice.
         /// Creates a Do-While loop with an inside switch statement that gets keys input.
@@ -154,18 +166,6 @@ namespace ConsoleAppPongFinalProject
             Console.Write(" |_||_|_\\__, |_||_/__/\\__\\___/_| \\___|");
             Console.SetCursorPosition(LEFT_SET_CURSOR, 23);
             Console.WriteLine("        |___/                         ");
-        }
-
-        public void PrintPongTitle()
-        {
-            Console.SetCursorPosition(33, 0);
-            Console.Write("  ___  ___  _  _  ___ ");
-            Console.SetCursorPosition(33, 1);
-            Console.Write(" | _ \\/ _ \\| \\| |/ __|");
-            Console.SetCursorPosition(33, 2);
-            Console.Write(" |  _/ (_) | .` | (_ |");
-            Console.SetCursorPosition(33, 3);
-            Console.WriteLine(" |_|  \\___/|_|\\_|\\___|");
         }
 
         private void PrintPressToStart()
