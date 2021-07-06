@@ -1,36 +1,40 @@
-﻿namespace ConsoleAppPongFinalProject
+﻿using System;
+
+namespace ConsoleAppPongFinalProject
 {
-    public class SecondPlayer
+    public class SecondPlayer : Player, IMoveable
     {
-        public int XAxis { get; set; }
-        public int YAxis { get; set; }
-        private int _YDiraction;
-
-        public SecondPlayer(int x, int y)
+        public SecondPlayer() : base()
         {
-            XAxis = x;
-            YAxis = y;
+            Point.SetSecondPuddlePosition();
         }
 
-        public void SetSecondPlayerPosition(char[,] gameField)
+        public void HandleMovement()
         {
-            _YDiraction = YAxis;
-            for (int i = 0; i < 5; i++)
+            do
             {
-                gameField[_YDiraction, XAxis] = CharacterUtilities.PLAYER_ICON;
-                _YDiraction++;
-            }
-        }
-
-        public void ClearTheColumn(char[,] gameField)
-        {
-            for (int i = 1; i < 22; i++)
-            {
-                for (int j = 87; j <= 87; j++)
+                if (GoalCount == GameManager.GOALS_TO_REACH)
                 {
-                    gameField[i, j] = ' ';
+                    Console.SetCursorPosition(0, 28);
+                    Console.WriteLine("Press any key to continue..");
+                    Console.ReadKey(true);
                 }
-            }
+
+                ConsoleKeyInfo key = Console.ReadKey(true);
+                switch (key.Key)
+                {
+                    case ConsoleKey.W:
+                        if (BoardManager.CheckPlayerOutFieldAbove(Point))
+                            MoveUp();
+                        break;
+
+                    case ConsoleKey.S:
+                        if (BoardManager.CheckPlayerOutFieldBelow(Point))
+                            MoveDown();
+                        break;
+                }
+                SetPosition();
+            } while (!GameManager.IsGameOver);
         }
     }
 }

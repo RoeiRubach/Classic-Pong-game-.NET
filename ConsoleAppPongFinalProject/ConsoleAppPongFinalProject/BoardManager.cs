@@ -4,8 +4,8 @@ namespace ConsoleAppPongFinalProject
 {
     public class BoardManager
     {
-        public const int FIELD_HIGHT = 23;
-        public const int FIELD_WIDTH = 90;
+        private const int FIELD_HIGHT = 23;
+        private const int FIELD_WIDTH = 90;
 
         //private char[,] _gameField;
         //public char this[int x, int y]
@@ -27,7 +27,7 @@ namespace ConsoleAppPongFinalProject
 
         public void PrintGameField()
         {
-            UserInterface.PrintPongTitle();
+            UserInterfaceUtilities.PrintPongTitle();
             for (int i = 0; i < GameField.GetLength(0); i++)
             {
                 for (int j = 0; j < GameField.GetLength(1); j++)

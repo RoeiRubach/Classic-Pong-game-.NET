@@ -1,36 +1,41 @@
-﻿namespace ConsoleAppPongFinalProject
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleAppPongFinalProject
 {
-    class AutoPlayer
+    public class AutoPlayer : Player, IMoveable
     {
-        public int XAxis { get; set; }
-        public int YAxis { get; set; }
-        private int _YDiraction;
+        bool isReachTop = false;
 
-        public AutoPlayer(int x, int y)
+        public AutoPlayer() : base()
         {
-            XAxis = x;
-            YAxis = y;
+            Point.SetSecondPuddlePosition();
         }
 
-        public void SetAutoPlayerPosition(char[,] gameField)
+        public void HandleMovement()
         {
-            _YDiraction = YAxis;
-            for (int i = 0; i < 5; i++)
+            if (BoardManager.CheckPlayerOutFieldAbove(Point) && (!isReachTop))
+                MoveUp();
+
+            else if (BoardManager.CheckPlayerOutFieldAbove(Point))
             {
-                gameField[_YDiraction, XAxis] = CharacterUtilities.PLAYER_ICON;
-                _YDiraction++;
+                isReachTop = true;
+                MoveDown();
             }
+            else
+                isReachTop = false;
+
+            SetPosition();
         }
 
-        public void ClearTheColumn(char [,] gameField)
+        public void SetsAIAtMiddle()
         {
-            for (int i = 1; i < 22; i++)
-            {
-                for (int j = 87; j <= 87; j++)
-                {
-                    gameField[i, j] = ' ';
-                }
-            }
+            //Sets the auto-player's coordinates at the middle field.
+            Point.Y = BoardManager.GetHalfHight() - 2;
+            Point.X = BoardManager.GetHalfWidth() - 3;
         }
     }
 }

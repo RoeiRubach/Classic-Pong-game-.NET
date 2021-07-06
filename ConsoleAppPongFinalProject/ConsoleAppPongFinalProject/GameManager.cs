@@ -3,34 +3,33 @@ using System.Threading;
 
 namespace ConsoleAppPongFinalProject
 {
-    class GameManager
+    public class GameManager
     {
         public const int GOALS_TO_REACH = 5;
         public static bool IsGameOver = false;
 
-        private bool _isGoal = false;
-        private bool _isFirstPlayer = false;
-        private bool _isOtherPlayer = false;
-        private bool _isPlayerVSPlayer = false;
-        public static int AIGoalCount, SecondPlayerGoalCount;
-
-        //The next 7 lines initiates the objects.
-        private UserInterface _userInterface;
+        private GameUI _gameUI;
         private BoardManager _boardManager;
         private Ball _ball;
-        private Player _firstPlayer;
-        private ScoreDisplayHandler _scoreboard = new ScoreDisplayHandler();
-        //private FirstPlayer _firstPlayer = new FirstPlayer(2, ((BoardManager.FIELD_HIGHT / 2) - 2));
+        private FirstPlayer _firstPlayer;
+        private SecondPlayer secondPlayer;
         private AutoPlayer _autoPlayer;
-        private SecondPlayer _secondPlayer;
-        private Highscore _highscore = new Highscore();
+        private ScoreDisplayHandler _scoreboard;
+        private Highscore _highscore;
+
+        private bool _isGoal = false;
+        private bool _isFirstPlayer = false;
+        private bool _isAI = false;
+        private bool _isPlayerVSPlayer = false;
 
         public GameManager()
         {
-            _userInterface = new UserInterface();
+            _gameUI = new GameUI();
             _boardManager = new BoardManager();
-            _ball = new Ball(new Coordinate(BoardManager.GetHalfWidth(), BoardManager.GetHalfHight()));
-            _firstPlayer = new Player(new Coordinate(2, (BoardManager.FIELD_HIGHT / 2) - 2));
+            _ball = new Ball();
+            _firstPlayer = new FirstPlayer();
+            _scoreboard = new ScoreDisplayHandler();
+            _highscore = new Highscore();
         }
 
         //Controls the game logic and runs it.
@@ -44,86 +43,24 @@ namespace ConsoleAppPongFinalProject
         private void GetUserChoice()
         {
             UserChoice userChoice = UserChoice.None;
-            _userInterface.MainMenu(ref userChoice);
-
+            _gameUI.MainMenu(ref userChoice);
+            
             switch (userChoice)
             {
                 case UserChoice.SinglePlayer:
-                    AIGoalCount = 0;
-                    _autoPlayer = new AutoPlayer(BoardManager.FIELD_WIDTH - 3, (BoardManager.FIELD_HIGHT / 2) - 8);
-                    _autoPlayer.SetAutoPlayerPosition(BoardManager.GameField);
+                    //BoardManager.FIELD_WIDTH - 3 = 23 - 3 = 20
+                    _autoPlayer = new AutoPlayer();
                     Thread mySingleWorker = new Thread(ThreadFunctionForTheBall_AutoPlayer);
                     mySingleWorker.Start();
-                    _firstPlayer.StartPlayerLoop();
                     break;
-                //case UserChoice.PlayerVSPlayer:
-                //    _isPlayerVSPlayer = true;
-                //    SecondPlayerGoalCount = 0;
-                //    _secondPlayer = new SecondPlayer(BoardManager.FIELD_WIDTH - 3, (BoardManager.FIELD_HIGHT / 2) - 2);
-                //    _secondPlayer.SetSecondPlayerPosition(BoardManager.GameField);
-                //    Thread myMultiWorker = new Thread(ThreadFunctionForTheBall);
-                //    myMultiWorker.Start();
-                //    StartPlayerVSPlayerLoop();
-                //    break;
+                case UserChoice.PlayerVSPlayer:
+                    _isPlayerVSPlayer = true;
+                    secondPlayer = new SecondPlayer();
+                    Thread myMultiWorker = new Thread(ThreadFunctionForTheBall);
+                    myMultiWorker.Start();
+                    break;
             }
         }
-
-        //private void StartPlayerVSPlayerLoop()
-        //{
-        //    do
-        //    {
-        //        ConsoleKeyInfo key = Console.ReadKey(true);
-        //        switch (key.Key)
-        //        {
-        //            case ConsoleKey.UpArrow:
-        //                //Checks if the FirstPlayer gets out the border.
-        //                if (_boardManager[_firstPlayer.YAxis - 1, _firstPlayer.XAxis] != CharacterUtilities.TOP_AND_BOTTOM_EDGES)
-        //                {
-        //                    _firstPlayer.YAxis--;
-        //                    _boardManager[_firstPlayer.YAxis + 5, _firstPlayer.XAxis] = ' ';
-        //                }
-        //                _firstPlayer.SetFirstPlayerPosition(_boardManager);
-        //                break;
-        //            case ConsoleKey.DownArrow:
-        //                //Checks if the FirstPlayer gets out the border.
-        //                if (_boardManager[_firstPlayer.YAxis + 5, _firstPlayer.XAxis] != CharacterUtilities.TOP_AND_BOTTOM_EDGES)
-        //                {
-        //                    _firstPlayer.YAxis++;
-        //                    _boardManager[_firstPlayer.YAxis - 1, _firstPlayer.XAxis] = ' ';
-        //                }
-        //                _firstPlayer.SetFirstPlayerPosition(_boardManager);
-        //                break;
-        //            case ConsoleKey.W:
-        //                //Checks if the SecondPlayer gets out the border.
-        //                if (_boardManager[_secondPlayer.YAxis - 1, _secondPlayer.XAxis] != CharacterUtilities.TOP_AND_BOTTOM_EDGES)
-        //                {
-        //                    _secondPlayer.YAxis--;
-        //                    _boardManager[_secondPlayer.YAxis + 5, _secondPlayer.XAxis] = ' ';
-        //                }
-        //                _secondPlayer.SetSecondPlayerPosition(_boardManager);
-        //                break;
-        //            case ConsoleKey.S:
-        //                //Checks if the SecondPlayer gets out the border.
-        //                if (_boardManager[_secondPlayer.YAxis + 5, _secondPlayer.XAxis] != CharacterUtilities.TOP_AND_BOTTOM_EDGES)
-        //                {
-        //                    _secondPlayer.YAxis++;
-        //                    _boardManager[_secondPlayer.YAxis - 1, _secondPlayer.XAxis] = ' ';
-        //                }
-        //                _secondPlayer.SetSecondPlayerPosition(_boardManager);
-        //                break;
-        //            default:
-        //                //Checks if the game has ended.
-        //                if ((_firstPlayerGoalCount == GOALS_TO_REACH) || (AIGoalCount == GOALS_TO_REACH) || (SecondPlayerGoalCount == GOALS_TO_REACH))
-        //                {
-        //                    Console.SetCursorPosition(0, 28);
-        //                    Console.WriteLine("Press any key to continue..");
-        //                    Console.ReadKey(true);
-        //                }
-        //                break;
-        //        }
-
-        //    } while (!IsGameOver);
-        //}
 
         /// <summary>
         /// Thread #2 that controls the -ball- and the -auto player-.
@@ -141,7 +78,7 @@ namespace ConsoleAppPongFinalProject
             Console.Clear();
             bool isReachTop = false;
             _isFirstPlayer = false;
-            _isOtherPlayer = false;
+            _isAI = false;
             _isGoal = false;
             char temp = CharacterUtilities.EMPTY_PIXEL;
             int ballXDiraction = 1, ballYDiraction = 0;
@@ -159,7 +96,7 @@ namespace ConsoleAppPongFinalProject
                     temp = CharacterUtilities.EMPTY_PIXEL;
 
                     _ball.CreateBallInconsistently(ref ballYDiraction, ref ballXDiraction, _isPlayerVSPlayer);
-                    SetsAIAtMiddle();
+                    _autoPlayer.SetsAIAtMiddle();
 
                     _isGoal = false;
                     Thread.Sleep(1300);
@@ -169,12 +106,12 @@ namespace ConsoleAppPongFinalProject
                         IsGameOver = true;
                         Console.SetCursorPosition(37, 15);
                         Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.WriteLine(_userInterface.PlayerOne + " wins!");
+                        Console.WriteLine(_gameUI.PlayerOne + " wins!");
                         Console.ForegroundColor = ConsoleColor.White;
-                        _highscore.HighscoreWriter(_userInterface.PlayerOne, _firstPlayer.GoalCount, AIGoalCount);
+                        _highscore.HighscoreWriter(_gameUI.PlayerOne, _firstPlayer.GoalCount, _autoPlayer.GoalCount);
                         break;
                     }
-                    else if (AIGoalCount == GOALS_TO_REACH)
+                    else if (_autoPlayer.GoalCount == GOALS_TO_REACH)
                     {
                         IsGameOver = true;
                         Console.SetCursorPosition(35, 15);
@@ -182,13 +119,14 @@ namespace ConsoleAppPongFinalProject
                         Console.WriteLine("Computer wins!");
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.SetCursorPosition(30, 16);
-                        Console.WriteLine(_userInterface.PlayerOne + ", good luck next time.");
+                        Console.WriteLine(_gameUI.PlayerOne + ", good luck next time.");
                         break;
                     }
                 }
+
                 HandleAIMovement(ref isReachTop);
                 _boardManager.PrintGameField();
-                if (!IsCollidedWithAnObject(ref _isGoal, temp, ref ballXDiraction, ref ballYDiraction, ref _isFirstPlayer, ref _isOtherPlayer))
+                if (!IsCollidedWithAnObject(ref _isGoal, temp, ref ballXDiraction, ref ballYDiraction, ref _isFirstPlayer, ref _isAI))
                 {
                     _ball.BallMovementLogic(ref temp, this, ballXDiraction, ballYDiraction);
                 }
@@ -212,7 +150,7 @@ namespace ConsoleAppPongFinalProject
         {
             Console.Clear();
             _isFirstPlayer = false;
-            _isOtherPlayer = false;
+            _isAI = false;
             _isGoal = false;
             char temp = CharacterUtilities.EMPTY_PIXEL;
             int ballXDiraction = 1, ballYDiraction = 0;
@@ -239,39 +177,30 @@ namespace ConsoleAppPongFinalProject
                         IsGameOver = true;
                         Console.SetCursorPosition(37, 15);
                         Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.WriteLine(_userInterface.PlayerOne + " wins!");
+                        Console.WriteLine(_gameUI.PlayerOne + " wins!");
                         Console.ForegroundColor = ConsoleColor.White;
-                        _highscore.HighscoreWriter(_userInterface.PlayerOne, _userInterface.PlayerTwo , _firstPlayer.GoalCount, SecondPlayerGoalCount);
+                        _highscore.HighscoreWriter(_gameUI.PlayerOne, _gameUI.PlayerTwo , _firstPlayer.GoalCount, secondPlayer.GoalCount);
                         break;
                     }
-                    else if (SecondPlayerGoalCount == GOALS_TO_REACH)
+                    else if (secondPlayer.GoalCount == GOALS_TO_REACH)
                     {
                         IsGameOver = true;
                         Console.SetCursorPosition(35, 15);
                         Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.WriteLine(_userInterface.PlayerTwo + " wins!");
+                        Console.WriteLine(_gameUI.PlayerTwo + " wins!");
                         Console.ForegroundColor = ConsoleColor.White;
-                        _highscore.HighscoreWriter(_userInterface.PlayerOne ,_userInterface.PlayerTwo, _firstPlayer.GoalCount, SecondPlayerGoalCount);
+                        _highscore.HighscoreWriter(_gameUI.PlayerOne ,_gameUI.PlayerTwo, _firstPlayer.GoalCount, secondPlayer.GoalCount);
                         break;
                     }
                 }
                 _boardManager.PrintGameField();
-                if (!IsCollidedWithAnObject(ref _isGoal, temp, ref ballXDiraction, ref ballYDiraction, ref _isFirstPlayer, ref _isOtherPlayer))
+                if (!IsCollidedWithAnObject(ref _isGoal, temp, ref ballXDiraction, ref ballYDiraction, ref _isFirstPlayer, ref _isAI))
                 {
                     _ball.BallMovementLogic(ref temp, this, ballXDiraction, ballYDiraction);
                 }
             } while (!IsGameOver);
             _ball.SetBackToOrigin();
-            _secondPlayer.ClearTheColumn(BoardManager.GameField);
-        }
-
-        private void SetsAIAtMiddle()
-        {
-            //Sets the auto-player's coordinates at the middle field.
-            _autoPlayer.ClearTheColumn(BoardManager.GameField);
-            _autoPlayer.YAxis = BoardManager.GetHalfHight() - 2;
-            _autoPlayer.XAxis = BoardManager.GetHalfWidth() - 3;
-            _autoPlayer.SetAutoPlayerPosition(BoardManager.GameField);
+            ClearTheColumn(BoardManager.GameField);
         }
 
         //Score method for the first player aginst the computer.
@@ -287,7 +216,7 @@ namespace ConsoleAppPongFinalProject
             {
                 int location = 83;
                 AIGoalCount++;
-                PrintCurrentScore(AIGoalCount, location);
+                PrintCurrentScore(_autoPlayer.GoalCount, location);
             }
         }
 
@@ -307,29 +236,6 @@ namespace ConsoleAppPongFinalProject
         //        PrintCurrentScore(SecondPlayerGoalCount, location);
         //    }
         //}
-
-        private void HandleAIMovement(ref bool isReachTop)
-        {
-            //Checks if the paddle reached the upper edge.
-            if ((BoardManager.GameField[_autoPlayer.YAxis - 1, _autoPlayer.XAxis] != CharacterUtilities.TOP_AND_BOTTOM_EDGES) && (!isReachTop))
-            {
-                _autoPlayer.YAxis--;
-                BoardManager.GameField[_autoPlayer.YAxis + 5, _autoPlayer.XAxis] = CharacterUtilities.EMPTY_PIXEL;
-            }
-            //Checks if the paddle reached the bottom edge.
-            else if (BoardManager.GameField[_autoPlayer.YAxis + 5, _autoPlayer.XAxis] != CharacterUtilities.TOP_AND_BOTTOM_EDGES)
-            {
-                isReachTop = true;
-                _autoPlayer.YAxis++;
-                BoardManager.GameField[_autoPlayer.YAxis - 1, _autoPlayer.XAxis] = CharacterUtilities.EMPTY_PIXEL;
-            }
-            else
-            {
-                isReachTop = false;
-            }
-            //Sets the paddle to his new location.
-            _autoPlayer.SetAutoPlayerPosition(BoardManager.GameField);
-        }
 
         private bool IsCollidedWithAnObject(ref bool isGoal, char temp, ref int xDiraction, ref int yDiraction, ref bool isManual, ref bool isOtherPlayer)
         {
@@ -385,9 +291,9 @@ namespace ConsoleAppPongFinalProject
             int autoTemp = 0, firstPlayerTemp = _firstPlayer.Point.Y, secondPlayerTemp = 0;
 
             if (_isPlayerVSPlayer)
-                secondPlayerTemp = _secondPlayer.YAxis;
+                secondPlayerTemp = secondPlayer.Point.Y;
             else
-                autoTemp = _autoPlayer.YAxis;
+                autoTemp = _autoPlayer.Point.Y;
 
             for (int i = 0; i < 5; i++)
             {
@@ -395,7 +301,7 @@ namespace ConsoleAppPongFinalProject
                 //First player and second player paddles.
                 if (_isPlayerVSPlayer)
                 {
-                    if (BoardManager.GameField[firstPlayerTemp, _firstPlayer.Point.X] == BoardManager.GameField[_ball.Point.Y, _ball.Point.X] || (BoardManager.GameField[secondPlayerTemp, _secondPlayer.XAxis] == BoardManager.GameField[_ball.Point.Y, _ball.Point.X]))
+                    if (BoardManager.GameField[firstPlayerTemp, _firstPlayer.Point.X] == BoardManager.GameField[_ball.Point.Y, _ball.Point.X] || (BoardManager.GameField[secondPlayerTemp, secondPlayer.Point.X] == BoardManager.GameField[_ball.Point.Y, _ball.Point.X]))
                     {
                         ifCollidedWithAPaddle(ref collidedWithBall, i);
                         break;
@@ -406,7 +312,7 @@ namespace ConsoleAppPongFinalProject
                 {
                     //Checks which part of the paddle collided with the ball - if so, saves that part.
                     //First player and computer paddles.
-                    if (BoardManager.GameField[firstPlayerTemp, _firstPlayer.Point.X] == BoardManager.GameField[_ball.Point.Y, _ball.Point.X] || (BoardManager.GameField[autoTemp, _autoPlayer.XAxis] == BoardManager.GameField[_ball.Point.Y, _ball.Point.X]))
+                    if (BoardManager.GameField[firstPlayerTemp, _firstPlayer.Point.X] == BoardManager.GameField[_ball.Point.Y, _ball.Point.X] || (BoardManager.GameField[autoTemp, _autoPlayer.Point.X] == BoardManager.GameField[_ball.Point.Y, _ball.Point.X]))
                     {
                         ifCollidedWithAPaddle(ref collidedWithBall, i);
                         break;
@@ -472,12 +378,12 @@ namespace ConsoleAppPongFinalProject
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Blue;
-                UserInterface.PrintPongTitle();
+                UserInterfaceUtilities.PrintPongTitle();
                 Console.SetCursorPosition(28, 7);
                 Console.Write("Will you want to restart the game?");
                 Console.SetCursorPosition(26, 8);
                 Console.Write("Enter -1- to restart or -2- to exit: ");
-            } while (!Int32.TryParse(Console.ReadLine(), out oneOrTwo));
+            } while (!int.TryParse(Console.ReadLine(), out oneOrTwo));
             return oneOrTwo;
         }
 
@@ -518,7 +424,18 @@ namespace ConsoleAppPongFinalProject
         {
             //The next 2 lines resets the auto-player's coordinates.
             isReachTop = false;
-            _autoPlayer.ClearTheColumn(BoardManager.GameField);
+            ClearTheColumn(BoardManager.GameField);
+        }
+
+        private void ClearTheColumn(char[,] gameField)
+        {
+            for (int i = 1; i < 22; i++)
+            {
+                for (int j = 87; j <= 87; j++)
+                {
+                    gameField[i, j] = ' ';
+                }
+            }
         }
     }
 }

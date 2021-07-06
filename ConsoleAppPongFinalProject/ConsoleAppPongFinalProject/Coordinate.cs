@@ -2,13 +2,25 @@
 {
     public struct Coordinate
     {
-        public int X;
-        public int Y;
-        
-        public Coordinate(int x, int y)
+        public int X { get; set; }
+        public int Y { get; set; }
+
+        public void SetFirstPuddlePosition()
         {
-            this.X = x;
-            this.Y = y;
+            X = 2;
+            Y = BoardManager.GetHalfHight() - 2;
+        }
+
+        public void SetSecondPuddlePosition()
+        {
+            X = 20;
+            Y = BoardManager.GetHalfHight() - 8;
+        }
+
+        public void SetCenterBoardPosition()
+        {
+            X = BoardManager.GetHalfWidth();
+            Y = BoardManager.GetHalfHight();
         }
     }
 }

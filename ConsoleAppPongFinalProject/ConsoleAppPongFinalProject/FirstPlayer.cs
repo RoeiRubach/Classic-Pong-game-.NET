@@ -1,25 +1,44 @@
-﻿namespace ConsoleAppPongFinalProject
-{
-    class FirstPlayer
-    {
-        public int XAxis { get; set; }
-        public int YAxis { get; set; }
-        private int _YDiraction;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-        public FirstPlayer(int x, int y)
+namespace ConsoleAppPongFinalProject
+{
+    public class FirstPlayer : Player, IMoveable
+    {
+        public FirstPlayer() : base()
         {
-            XAxis = x;
-            YAxis = y;
+            Point.SetFirstPuddlePosition();
         }
 
-        public void SetFirstPlayerPosition(char[,] gameField)
+        public void HandleMovement()
         {
-            _YDiraction = YAxis;
-            for (int i = 0; i < 5; i++)
+            do
             {
-                gameField[_YDiraction, XAxis] = CharacterUtilities.PLAYER_ICON;
-                _YDiraction++;
-            }
+                if (GoalCount == GameManager.GOALS_TO_REACH)
+                {
+                    Console.SetCursorPosition(0, 28);
+                    Console.WriteLine("Press any key to continue..");
+                    Console.ReadKey(true);
+                }
+
+                ConsoleKeyInfo key = Console.ReadKey(true);
+                switch (key.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        if (BoardManager.CheckPlayerOutFieldAbove(Point))
+                            MoveUp();
+                        break;
+
+                    case ConsoleKey.DownArrow:
+                        if (BoardManager.CheckPlayerOutFieldBelow(Point))
+                            MoveDown();
+                        break;
+                }
+                SetPosition();
+            } while (!GameManager.IsGameOver);
         }
     }
 }

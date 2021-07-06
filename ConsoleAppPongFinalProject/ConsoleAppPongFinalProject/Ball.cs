@@ -1,12 +1,13 @@
 ﻿namespace ConsoleAppPongFinalProject
 {
-    class Ball
+    public class Ball
     {
         public Coordinate Point { get; private set; }
 
-        public Ball(Coordinate point)
+        public Ball()
         {
-            Point = point;
+            Point = new Coordinate();
+            Point.SetCenterBoardPosition();
             SetBallPosition();
         }
 
@@ -36,18 +37,14 @@
         public void SetBackToOrigin()
         {
             BoardManager.GameField[Point.Y, Point.X] = CharacterUtilities.EMPTY_PIXEL;
-            //The next 3 lines resets the ball's coordinates.
-            Coordinate point;
-            point.Y = BoardManager.GetHalfHight();
-            point.X = BoardManager.GetHalfWidth();
-            Point = point;
+            Point.SetCenterBoardPosition();
             SetBallPosition();
         }
 
         public void CreateBallInconsistently(ref int ballYDiraction, ref int ballXDiraction, bool isTwoPlayers)
         {
             //Spawns the ball at Inconsistently coordinates.
-            Coordinate point;
+            Coordinate point = new Coordinate();
             point.Y = (GameManager.RandomNumer() + GameManager.RandomNumer() + GameManager.RandomNumer() + GameManager.RandomNumer() + BoardManager.GetHalfHight());
             point.X = 2 + GameManager.RandomNumer() + BoardManager.GetHalfWidth();
             Point = point;

@@ -49,17 +49,19 @@
     <Compile Include="BoardBorder.cs" />
     <Compile Include="CharacterUtilities.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="FirstPlayer.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="Highscore.cs" />
+    <Compile Include="IMoveable.cs" />
     <Compile Include="Instructions.cs" />
-    <Compile Include="FirstPlayer.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Coordinate.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScoreDisplayHandler.cs" />
+    <Compile Include="GameUI.cs" />
     <Compile Include="SecondPlayer.cs" />
-    <Compile Include="UserInterface.cs" />
+    <Compile Include="UserInterfaceUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
