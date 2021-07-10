@@ -27,7 +27,7 @@ namespace ConsoleAppPongFinalProject
 
         public void PrintGameField()
         {
-            UserInterfaceUtilities.PrintPongTitle();
+            UserInterfaceUtilities.PrintColoredPongTitle();
             for (int i = 0; i < GameField.GetLength(0); i++)
             {
                 for (int j = 0; j < GameField.GetLength(1); j++)
@@ -38,13 +38,14 @@ namespace ConsoleAppPongFinalProject
             }
         }
 
-        public static int GetHalfHight() => FIELD_HIGHT / 2;
-        public static int GetHalfWidth() => FIELD_WIDTH / 2;
+        public static int GetHalfFieldHight() => FIELD_HIGHT / 2;
+        public static int GetHalfFieldWidth() => FIELD_WIDTH / 2;
 
         public static bool CheckPlayerOutFieldAbove(Coordinate point)
         {
             return GameField[point.Y - 1, point.X] != CharacterUtilities.TOP_AND_BOTTOM_EDGES;
         }
+
         public static bool CheckPlayerOutFieldBelow(Coordinate point)
         {
             return GameField[point.Y + 5, point.X] != CharacterUtilities.TOP_AND_BOTTOM_EDGES;

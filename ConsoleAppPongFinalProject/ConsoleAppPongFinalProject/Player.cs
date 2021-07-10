@@ -4,6 +4,8 @@ namespace ConsoleAppPongFinalProject
 {
     public class Player
     {
+        protected static event Action GoalScored;
+
         public int GoalCount { get; private set; }
         public Coordinate Point;
 

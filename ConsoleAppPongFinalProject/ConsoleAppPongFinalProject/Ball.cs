@@ -45,8 +45,8 @@
         {
             //Spawns the ball at Inconsistently coordinates.
             Coordinate point = new Coordinate();
-            point.Y = (GameManager.RandomNumer() + GameManager.RandomNumer() + GameManager.RandomNumer() + GameManager.RandomNumer() + BoardManager.GetHalfHight());
-            point.X = 2 + GameManager.RandomNumer() + BoardManager.GetHalfWidth();
+            point.Y = (GameManager.RandomNumer() + GameManager.RandomNumer() + GameManager.RandomNumer() + GameManager.RandomNumer() + BoardManager.GetHalfFieldHight());
+            point.X = 2 + GameManager.RandomNumer() + BoardManager.GetHalfFieldWidth();
             Point = point;
             ballYDiraction = GameManager.RandomNumer();
 

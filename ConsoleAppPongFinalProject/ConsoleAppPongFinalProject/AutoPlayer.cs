@@ -34,8 +34,8 @@ namespace ConsoleAppPongFinalProject
         public void SetsAIAtMiddle()
         {
             //Sets the auto-player's coordinates at the middle field.
-            Point.Y = BoardManager.GetHalfHight() - 2;
-            Point.X = BoardManager.GetHalfWidth() - 3;
+            Point.Y = BoardManager.GetHalfFieldHight() - 2;
+            Point.X = BoardManager.GetHalfFieldWidth() - 3;
         }
     }
 }

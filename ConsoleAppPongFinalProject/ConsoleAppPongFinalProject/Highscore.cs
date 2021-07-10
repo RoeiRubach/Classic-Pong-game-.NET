@@ -5,7 +5,18 @@ namespace ConsoleAppPongFinalProject
 {
     class Highscore
     {
-        private string _path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Highscores.txt");
+        private readonly string _path;
+
+        public Highscore()
+        {
+            _path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Highscores.txt");
+            GameManager.GameOver += OnGameOver;
+        }
+
+        private void OnGameOver()
+        {
+            GameManager.GameOver -= OnGameOver;
+        }
 
         //First player aginst the computer writer.
         public void HighscoreWriter(string playerName, int firstPlayerGoalCount, int autoGoalCount)

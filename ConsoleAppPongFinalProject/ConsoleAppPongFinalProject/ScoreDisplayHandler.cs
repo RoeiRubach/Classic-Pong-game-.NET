@@ -4,10 +4,26 @@ namespace ConsoleAppPongFinalProject
 {
     public class ScoreDisplayHandler
     {
-        public void PrintCurrentScore(int currentScore, int location)
+        private const int RIGHT_SIDE_SCORE_LOCATION = 83;
+
+        public ScoreDisplayHandler()
+        {
+            ResetBothScores();
+        }
+
+        private void ResetBothScores()
+        {
+            //First score for the manual player.
+            PrintCurrentScore(0, 0);
+            //First score for the auto player.
+            PrintCurrentScore(0, RIGHT_SIDE_SCORE_LOCATION);
+        }
+
+        public void PrintCurrentScore(int scoreToDisplay, int location)
         {
             ClearScore(location);
-            switch (currentScore)
+
+            switch (scoreToDisplay)
             {
                 case 0:
                     PrintZero(location);

@@ -9,7 +9,51 @@ namespace ConsoleAppPongFinalProject
 
         private Instructions _instructions = new Instructions();
         private Highscore _highscore = new Highscore();
-        private int _leftForCursorIcon = 22, _topForCursorIcon;
+        private int _leftForCursorIcon = 22;
+        private int _topForCursorIcon;
+
+        public GameUI()
+        {
+            GameManager.GameOver += DisplayWinnerOnGameOver;
+        }
+
+        private void DisplayWinnerOnGameOver()
+        {
+            GameManager.GameOver -= DisplayWinnerOnGameOver;
+
+            switch (GameManager.UserChoice)
+            {
+                case UserChoice.SinglePlayer:
+
+                    Console.SetCursorPosition(37, 15);
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine(PlayerOne + " wins!");
+                    Console.ForegroundColor = ConsoleColor.White;
+
+
+                    Console.SetCursorPosition(35, 15);
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine("Computer wins!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.SetCursorPosition(30, 16);
+                    Console.WriteLine(PlayerOne + ", good luck next time.");
+                    break;
+
+                case UserChoice.PlayerVSPlayer:
+
+                    Console.SetCursorPosition(37, 15);
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine(PlayerOne + " wins!");
+                    Console.ForegroundColor = ConsoleColor.White;
+
+
+                    Console.SetCursorPosition(35, 15);
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine(PlayerTwo + " wins!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;
+            }
+        }
 
         /// <summary>
         /// A method that controls the UI -Main Menu- and returns the user choice.
@@ -19,18 +63,15 @@ namespace ConsoleAppPongFinalProject
         /// </summary>
         /// <param name="userChoice"></param>
         /// <returns></returns>
-        public void MainMenu(ref UserChoice userChoice)
+        public void MainMenu()
         {
             _topForCursorIcon = 3;
-            bool isPressed = false;
+            bool hasChoosen = false;
             Console.Clear();
 
             do
             {
-                Console.ForegroundColor = ConsoleColor.Blue;
-                UserInterfaceUtilities.PrintPongTitle();
-                Console.ForegroundColor = ConsoleColor.White;
-                PrintTitles();
+                UserInterfaceUtilities.PrintMainMenuTitles();
 
                 ConsoleKeyInfo key = Console.ReadKey(true);
                 switch (key.Key)
@@ -59,7 +100,7 @@ namespace ConsoleAppPongFinalProject
                                 PlayerOne = _instructions.SetPlayerName(1);
                                 _instructions.PrintPlayerOneInstructions(PlayerOne);
                                 UserInterfaceUtilities.PrintPressToStart();
-                                userChoice = UserChoice.SinglePlayer;
+                                GameManager.UserChoice = UserChoice.SinglePlayer;
                                 break;
 
                             case (int)UserOptions.PvP:
@@ -68,17 +109,17 @@ namespace ConsoleAppPongFinalProject
                                 PlayerTwo = _instructions.SetPlayerName(2);
                                 _instructions.PrintPlayerTwoInstructions(PlayerOne, PlayerTwo);
                                 UserInterfaceUtilities.PrintPressToStart();
-                                userChoice = UserChoice.PlayerVSPlayer;
+                                GameManager.UserChoice = UserChoice.PlayerVSPlayer;
                                 break;
 
                             case (int)UserOptions.Highscore:
                                 UserInterfaceUtilities.PrintHighscoreAsTitle();
                                 _highscore.HighscoreReader();
                                 Console.ReadKey(true);
-                                MainMenu(ref userChoice);
+                                MainMenu();
                                 break;
                         }
-                        isPressed = true;
+                        hasChoosen = true;
                         break;
 
                     case ConsoleKey.Escape:
@@ -86,15 +127,7 @@ namespace ConsoleAppPongFinalProject
                         Environment.Exit(0);
                         break;
                 }
-            } while (!isPressed);
-        }
-
-        private static void PrintTitles()
-        {
-            UserInterfaceUtilities.PrintOnePlayer();
-            UserInterfaceUtilities.PrintTwoPlayers();
-            UserInterfaceUtilities.PrintHighScore();
-            UserInterfaceUtilities.MainMenuInstructions();
+            } while (!hasChoosen);
         }
 
         private void DrawCursor()

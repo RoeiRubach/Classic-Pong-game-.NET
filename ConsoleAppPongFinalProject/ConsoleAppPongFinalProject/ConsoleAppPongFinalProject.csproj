@@ -61,6 +61,7 @@
     <Compile Include="ScoreDisplayHandler.cs" />
     <Compile Include="GameUI.cs" />
     <Compile Include="SecondPlayer.cs" />
+    <Compile Include="ThreadController.cs" />
     <Compile Include="UserInterfaceUtilities.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,8 +5,11 @@ namespace ConsoleAppPongFinalProject
 {
     public class GameManager
     {
+        public static event Action GameOver;
+
         public const int GOALS_TO_REACH = 5;
         public static bool IsGameOver = false;
+        public static UserChoice UserChoice = UserChoice.None;
 
         private GameUI _gameUI;
         private BoardManager _boardManager;
@@ -16,7 +19,6 @@ namespace ConsoleAppPongFinalProject
         private AutoPlayer _autoPlayer;
         private ScoreDisplayHandler _scoreboard;
         private Highscore _highscore;
-
         private bool _isGoal = false;
         private bool _isFirstPlayer = false;
         private bool _isAI = false;
@@ -42,13 +44,11 @@ namespace ConsoleAppPongFinalProject
 
         private void GetUserChoice()
         {
-            UserChoice userChoice = UserChoice.None;
-            _gameUI.MainMenu(ref userChoice);
+            _gameUI.MainMenu();
             
-            switch (userChoice)
+            switch (UserChoice)
             {
                 case UserChoice.SinglePlayer:
-                    //BoardManager.FIELD_WIDTH - 3 = 23 - 3 = 20
                     _autoPlayer = new AutoPlayer();
                     Thread mySingleWorker = new Thread(ThreadFunctionForTheBall_AutoPlayer);
                     mySingleWorker.Start();
@@ -82,10 +82,6 @@ namespace ConsoleAppPongFinalProject
             _isGoal = false;
             char temp = CharacterUtilities.EMPTY_PIXEL;
             int ballXDiraction = 1, ballYDiraction = 0;
-            //First score for the manual player.
-            _scoreboard.PrintCurrentScore(0, 0);
-            //First score for the auto player.
-            _scoreboard.PrintCurrentScore(0, 83);
 
             do
             {
@@ -104,33 +100,29 @@ namespace ConsoleAppPongFinalProject
                     if (_firstPlayer.GoalCount == GOALS_TO_REACH)
                     {
                         IsGameOver = true;
-                        Console.SetCursorPosition(37, 15);
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.WriteLine(_gameUI.PlayerOne + " wins!");
-                        Console.ForegroundColor = ConsoleColor.White;
+                        GameOver?.Invoke();
                         _highscore.HighscoreWriter(_gameUI.PlayerOne, _firstPlayer.GoalCount, _autoPlayer.GoalCount);
                         break;
                     }
+
                     else if (_autoPlayer.GoalCount == GOALS_TO_REACH)
                     {
                         IsGameOver = true;
-                        Console.SetCursorPosition(35, 15);
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.WriteLine("Computer wins!");
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.SetCursorPosition(30, 16);
-                        Console.WriteLine(_gameUI.PlayerOne + ", good luck next time.");
+                        GameOver?.Invoke();
                         break;
                     }
                 }
 
                 HandleAIMovement(ref isReachTop);
                 _boardManager.PrintGameField();
+
                 if (!IsCollidedWithAnObject(ref _isGoal, temp, ref ballXDiraction, ref ballYDiraction, ref _isFirstPlayer, ref _isAI))
                 {
                     _ball.BallMovementLogic(ref temp, this, ballXDiraction, ballYDiraction);
                 }
+
             } while (!IsGameOver);
+
             _ball.SetBackToOrigin();
             AutoPlayerValueReset(ref isReachTop);
         }
@@ -154,10 +146,6 @@ namespace ConsoleAppPongFinalProject
             _isGoal = false;
             char temp = CharacterUtilities.EMPTY_PIXEL;
             int ballXDiraction = 1, ballYDiraction = 0;
-            //First score for the first player.
-            _scoreboard.PrintCurrentScore(0, 0);
-            //First score for the second player.
-            _scoreboard.PrintCurrentScore(0, 83);
 
             do
             {
@@ -175,24 +163,21 @@ namespace ConsoleAppPongFinalProject
                     if (_firstPlayer.GoalCount == GOALS_TO_REACH)
                     {
                         IsGameOver = true;
-                        Console.SetCursorPosition(37, 15);
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.WriteLine(_gameUI.PlayerOne + " wins!");
-                        Console.ForegroundColor = ConsoleColor.White;
+                        GameOver?.Invoke();
+
                         _highscore.HighscoreWriter(_gameUI.PlayerOne, _gameUI.PlayerTwo , _firstPlayer.GoalCount, secondPlayer.GoalCount);
                         break;
                     }
                     else if (secondPlayer.GoalCount == GOALS_TO_REACH)
                     {
                         IsGameOver = true;
-                        Console.SetCursorPosition(35, 15);
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.WriteLine(_gameUI.PlayerTwo + " wins!");
-                        Console.ForegroundColor = ConsoleColor.White;
+                        GameOver?.Invoke();
+
                         _highscore.HighscoreWriter(_gameUI.PlayerOne ,_gameUI.PlayerTwo, _firstPlayer.GoalCount, secondPlayer.GoalCount);
                         break;
                     }
                 }
+
                 _boardManager.PrintGameField();
                 if (!IsCollidedWithAnObject(ref _isGoal, temp, ref ballXDiraction, ref ballYDiraction, ref _isFirstPlayer, ref _isAI))
                 {
@@ -378,7 +363,7 @@ namespace ConsoleAppPongFinalProject
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Blue;
-                UserInterfaceUtilities.PrintPongTitle();
+                UserInterfaceUtilities.PrintColoredPongTitle();
                 Console.SetCursorPosition(28, 7);
                 Console.Write("Will you want to restart the game?");
                 Console.SetCursorPosition(26, 8);

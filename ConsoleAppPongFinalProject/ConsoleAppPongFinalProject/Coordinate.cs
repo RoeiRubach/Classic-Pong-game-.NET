@@ -8,19 +8,19 @@
         public void SetFirstPuddlePosition()
         {
             X = 2;
-            Y = BoardManager.GetHalfHight() - 2;
+            Y = BoardManager.GetHalfFieldHight() - 2;
         }
 
         public void SetSecondPuddlePosition()
         {
             X = 20;
-            Y = BoardManager.GetHalfHight() - 8;
+            Y = BoardManager.GetHalfFieldHight() - 8;
         }
 
         public void SetCenterBoardPosition()
         {
-            X = BoardManager.GetHalfWidth();
-            Y = BoardManager.GetHalfHight();
+            X = BoardManager.GetHalfFieldWidth();
+            Y = BoardManager.GetHalfFieldHight();
         }
     }
 }
