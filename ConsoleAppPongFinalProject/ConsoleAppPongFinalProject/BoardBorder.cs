@@ -1,6 +1,8 @@
-﻿namespace ConsoleAppPongFinalProject
+﻿using System;
+
+namespace ConsoleAppPongFinalProject
 {
-    public class BoardBorder
+    class BoardBorder
     {
         public BoardBorder(char[,] gameBoard) => SetBorder(gameBoard);
 

@@ -2,16 +2,24 @@
 
 namespace ConsoleAppPongFinalProject
 {
-    public class Player
+    class Player
     {
         protected static event Action GoalScored;
 
         public int GoalCount { get; private set; }
+        public static event Action GameOver;
+        public static event Action<int, int> PlayerScored;
+
+        public string PlayerName { get; protected set; }
+        public int GoalCount { get; protected set; }
+		
         public Coordinate Point;
+
+        protected ScoreDisplayHandler scoreDisplayHandler;
+        protected int playerNum;
 
         public Player()
         {
-            GoalCount = 0;
             Point = new Coordinate();
             SetPosition();
         }
@@ -22,6 +30,42 @@ namespace ConsoleAppPongFinalProject
 
             for (int y = Point.Y; y < playerLength; y++)
                 BoardManager.GameField[y, Point.X] = CharacterUtilities.PLAYER_ICON;
+        }
+
+        protected void OnPaddleCollision()
+        {
+            int currentY = Point.Y;
+
+            for (int paddleEdge = 0; paddleEdge < 5; paddleEdge++)
+            {
+                if(BoardManager.GameField[currentY, Point.X] == CharacterUtilities.BALL_ICON)
+                {
+                    if ((paddleEdge == 0) || (paddleEdge == 1))
+                        Ball.Instance.ChangeBallDirection(PaddleEdge.UpperEdge);
+                    else if (paddleEdge == 2)
+                        Ball.Instance.ChangeBallDirection(PaddleEdge.MiddleEdge);
+                    else
+                        Ball.Instance.ChangeBallDirection(PaddleEdge.BottomEdge);
+                }
+                else
+                    currentY++;
+            }
+        }
+
+        protected void OnGoalScored(int whichPlayer)
+        {
+            if (whichPlayer != playerNum) return;
+
+            GoalCount++;
+            PlayerScored?.Invoke(GoalCount, whichPlayer);
+
+            if (GoalCount == GameManager.GOALS_TO_REACH)
+                GameOver?.Invoke();
+        }
+
+        protected void SetPlayerName()
+        {
+
         }
 
         protected void MoveUp()
