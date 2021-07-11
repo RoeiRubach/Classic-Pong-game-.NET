@@ -2,7 +2,7 @@
 
 namespace ConsoleAppPongFinalProject
 {
-    class ScoreDisplayHandler
+    public class ScoreDisplayHandler
     {
         private const int RIGHT_SIDE_SCORE_LOCATION = 83;
 
@@ -19,25 +19,10 @@ namespace ConsoleAppPongFinalProject
             PrintCurrentScore(0, RIGHT_SIDE_SCORE_LOCATION);
         }
 
-        public void PrintCurrentScore(int scoreToDisplay, int location){
-            Player.PlayerScored += PrintCurrentScore;
-        }
-
-        private void ResetBothScores()
+        public void PrintCurrentScore(int scoreToDisplay, int location)
         {
-            PrintCurrentScore(0, 0);
-            PrintCurrentScore(0, RIGHT_SIDE_SCORE_LOCATION);
-        }
-
-        public void PrintCurrentScore(int scoreToDisplay, int playerNum)
-        {
-            int location;
-            if (playerNum == 1)
-                location = 0;
-            else
-                location = RIGHT_SIDE_SCORE_LOCATION;
-
             ClearScore(location);
+
             switch (scoreToDisplay)
             {
                 case 0:

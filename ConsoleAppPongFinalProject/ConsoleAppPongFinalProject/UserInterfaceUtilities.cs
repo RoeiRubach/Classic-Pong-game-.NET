@@ -5,6 +5,7 @@ namespace ConsoleAppPongFinalProject
     public static class UserInterfaceUtilities
     {
         private const int LEFT_SET_CURSOR = 28;
+
         public static void PrintMainMenuTitles()
         {
             PrintColoredPongTitle();
@@ -13,15 +14,8 @@ namespace ConsoleAppPongFinalProject
             PrintHighScore();
             MainMenuInstructions();
         }
-        public static void PrintTitles()
-        {
-            PrintOnePlayer();
-            PrintTwoPlayers();
-            PrintHighScore();
-            MainMenuInstructions();
-        }
 
-        public static void PrintPongTitle()
+        public static void PrintColoredPongTitle()
         {
             Console.ForegroundColor = ConsoleColor.Blue;
 
@@ -109,24 +103,6 @@ namespace ConsoleAppPongFinalProject
             Console.WriteLine("Use the -UpArrow- and the -DownArrow- keys to navigate or the -Escape- key to exit.");
             Console.SetCursorPosition(0, 28);
             Console.WriteLine("Use the -Enter- key to choose.");
-        }
-        public static void PrintHighscoreAsTitle()
-        {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Blue;
-
-            Console.SetCursorPosition(LEFT_SET_CURSOR, 0);
-            Console.Write("  _  _ _      _                       ");
-            Console.SetCursorPosition(LEFT_SET_CURSOR, 1);
-            Console.Write(" | || (_)__ _| |_  ___ __ ___ _ _ ___ ");
-            Console.SetCursorPosition(LEFT_SET_CURSOR, 2);
-            Console.Write(" | __ | / _` | ' \\(_-</ _/ _ \\ '_/ -_)");
-            Console.SetCursorPosition(LEFT_SET_CURSOR, 3);
-            Console.Write(" |_||_|_\\__, |_||_/__/\\__\\___/_| \\___|");
-            Console.SetCursorPosition(LEFT_SET_CURSOR, 4);
-            Console.WriteLine("        |___/                         ");
-
-            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }

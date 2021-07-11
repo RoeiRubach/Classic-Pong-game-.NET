@@ -2,7 +2,7 @@
 
 namespace ConsoleAppPongFinalProject
 {
-    class GameUI
+    public class GameUI
     {
         public string PlayerOne;
         public string PlayerTwo;
@@ -96,16 +96,18 @@ namespace ConsoleAppPongFinalProject
                         switch (_topForCursorIcon)
                         {
                             case (int)UserOptions.SoloPlayer:
-                                PlayerOne = SetPlayerName(1);
-                                _instructions.PrintSoloPlayerInstructions(PlayerOne);
+                                _instructions.ClearBoard();
+                                PlayerOne = _instructions.SetPlayerName(1);
+                                _instructions.PrintPlayerOneInstructions(PlayerOne);
                                 UserInterfaceUtilities.PrintPressToStart();
                                 GameManager.UserChoice = UserChoice.SinglePlayer;
                                 break;
 
                             case (int)UserOptions.PvP:
-                                PlayerOne = SetPlayerName(1);
-                                PlayerTwo = SetPlayerName(2);
-                                _instructions.PrintPVPInstructions(PlayerOne, PlayerTwo);
+                                _instructions.ClearBoard();
+                                PlayerOne = _instructions.SetPlayerName(1);
+                                PlayerTwo = _instructions.SetPlayerName(2);
+                                _instructions.PrintPlayerTwoInstructions(PlayerOne, PlayerTwo);
                                 UserInterfaceUtilities.PrintPressToStart();
                                 GameManager.UserChoice = UserChoice.PlayerVSPlayer;
                                 break;
@@ -125,30 +127,7 @@ namespace ConsoleAppPongFinalProject
                         Environment.Exit(0);
                         break;
                 }
-            } while (!isPressed);
-        }
-
-        private string SetPlayerName(int whichPlayer)
-        {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            DisplayNameWriting(whichPlayer);
-            string playerName = Console.ReadLine();
-            Console.ForegroundColor = ConsoleColor.White;
-            return playerName;
-        }
-
-        private void DisplayNameWriting(int whichPlayer)
-        {
-            Console.SetCursorPosition(3, 7);
-            switch (whichPlayer)
-            {
-                case 1:
-                    Console.Write("Enter -first player- name: ");
-                    break;
-                case 2:
-                    Console.Write("Enter -second player- name: ");
-                    break;
-            }
+            } while (!hasChoosen);
         }
 
         private void DrawCursor()

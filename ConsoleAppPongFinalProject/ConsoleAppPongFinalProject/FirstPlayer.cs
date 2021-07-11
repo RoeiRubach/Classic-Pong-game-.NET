@@ -2,17 +2,11 @@
 
 namespace ConsoleAppPongFinalProject
 {
-    class FirstPlayer : Player, IMoveable
+    public class FirstPlayer : Player, IMoveable
     {
         public FirstPlayer() : base()
         {
-            playerNum = 1;
-            PlayerName = null;
-            GoalCount = 0;
-            scoreDisplayHandler = new ScoreDisplayHandler();
             Point.SetFirstPuddlePosition();
-            Ball.PaddleCollisionDetected += OnPaddleCollision;
-            Ball.GoalScored += OnGoalScored;
         }
 
         public void HandleMovement()

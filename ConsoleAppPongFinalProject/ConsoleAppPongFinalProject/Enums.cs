@@ -7,7 +7,7 @@
         PlayerVSPlayer
     }
 
-    public enum PaddleEdge
+    public enum CollidedWithBall
     {
         None,
         UpperEdge,

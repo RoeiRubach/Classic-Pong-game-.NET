@@ -1,6 +1,6 @@
 ﻿namespace ConsoleAppPongFinalProject
 {
-    static class CharacterUtilities
+    public static class CharacterUtilities
     {
         public const char BALL_ICON = 'o';
         public const char CURSOR_ICON = '■';

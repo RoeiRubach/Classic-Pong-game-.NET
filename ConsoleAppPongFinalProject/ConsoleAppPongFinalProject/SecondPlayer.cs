@@ -2,7 +2,7 @@
 
 namespace ConsoleAppPongFinalProject
 {
-    class SecondPlayer : Player, IMoveable
+    public class SecondPlayer : Player, IMoveable
     {
         public SecondPlayer() : base()
         {
