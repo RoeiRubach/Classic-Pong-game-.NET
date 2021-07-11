@@ -6,8 +6,18 @@ namespace ConsoleAppPongFinalProject
     {
         private const int LEFT_SET_CURSOR = 28;
 
+        public static void PrintTitles()
+        {
+            PrintOnePlayer();
+            PrintTwoPlayers();
+            PrintHighScore();
+            MainMenuInstructions();
+        }
+
         public static void PrintPongTitle()
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
+
             Console.SetCursorPosition(33, 0);
             Console.Write("  ___  ___  _  _  ___ ");
             Console.SetCursorPosition(33, 1);
@@ -16,6 +26,8 @@ namespace ConsoleAppPongFinalProject
             Console.Write(" |  _/ (_) | .` | (_ |");
             Console.SetCursorPosition(33, 3);
             Console.WriteLine(" |_|  \\___/|_|\\_|\\___|");
+
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         public static void PrintOnePlayer()
@@ -79,6 +91,7 @@ namespace ConsoleAppPongFinalProject
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Blue;
+
             Console.SetCursorPosition(LEFT_SET_CURSOR, 0);
             Console.Write("  _  _ _      _                       ");
             Console.SetCursorPosition(LEFT_SET_CURSOR, 1);
@@ -89,6 +102,7 @@ namespace ConsoleAppPongFinalProject
             Console.Write(" |_||_|_\\__, |_||_/__/\\__\\___/_| \\___|");
             Console.SetCursorPosition(LEFT_SET_CURSOR, 4);
             Console.WriteLine("        |___/                         ");
+
             Console.ForegroundColor = ConsoleColor.White;
         }
     }

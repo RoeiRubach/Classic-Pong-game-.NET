@@ -1,61 +1,59 @@
-﻿namespace ConsoleAppPongFinalProject
+﻿using System;
+
+namespace ConsoleAppPongFinalProject
 {
-    public class BoardBorder
+    class BoardBorder
     {
-        private char[,] _gameBoard;
+        public BoardBorder(char[,] gameBoard) => SetBorder(gameBoard);
 
-        public BoardBorder(char[,] gameBoard)
+        #region Set Border
+        private void SetBorder(char[,] gameBoard)
         {
-            _gameBoard = gameBoard;
-            SetBorder();
-        }
-
-        private void SetBorder()
-        {
-            for (int i = 0; i < _gameBoard.GetLength(0); i++)
+            for (int i = 0; i < gameBoard.GetLength(0); i++)
             {
-                for (int j = 0; j < _gameBoard.GetLength(1); j++)
+                for (int j = 0; j < gameBoard.GetLength(1); j++)
                 {
                     if (i == 0)
-                        HandleUpperBorder(i, j);
+                        HandleUpperBorder(gameBoard, i, j);
 
-                    else if (i == _gameBoard.GetLength(0) - 1)
-                        HandleBottomBorder(i, j);
+                    else if (i == gameBoard.GetLength(0) - 1)
+                        HandleBottomBorder(gameBoard, i, j);
 
                     else
                     {
-                        _gameBoard[i, j] = CharacterUtilities.EMPTY_PIXEL;
-                        HandleLeftRightEdges(i, j);
+                        gameBoard[i, j] = CharacterUtilities.EMPTY_PIXEL;
+                        HandleLeftRightEdges(gameBoard, i, j);
                     }
                 }
             }
         }
 
-        private void HandleUpperBorder(int i, int j)
+        private void HandleUpperBorder(char[,] gameBoard, int i, int j)
         {
-            _gameBoard[i, j] = CharacterUtilities.TOP_AND_BOTTOM_EDGES;
+            gameBoard[i, j] = CharacterUtilities.TOP_AND_BOTTOM_EDGES;
 
             if (j == 0)
-                _gameBoard[i, j] = CharacterUtilities.LEFT_UPPER_CORNER;
+                gameBoard[i, j] = CharacterUtilities.LEFT_UPPER_CORNER;
 
-            else if (j == _gameBoard.GetLength(1) - 1)
-                _gameBoard[i, j] = CharacterUtilities.RIGHT_UPPER_CORNER;
+            else if (j == gameBoard.GetLength(1) - 1)
+                gameBoard[i, j] = CharacterUtilities.RIGHT_UPPER_CORNER;
         }
 
-        private void HandleBottomBorder(int i, int j)
+        private void HandleBottomBorder(char[,] gameBoard, int i, int j)
         {
-            _gameBoard[i, j] = CharacterUtilities.TOP_AND_BOTTOM_EDGES;
+            gameBoard[i, j] = CharacterUtilities.TOP_AND_BOTTOM_EDGES;
             if (j == 0)
-                _gameBoard[i, j] = CharacterUtilities.LEFT_BOTTOM_CORNER;
+                gameBoard[i, j] = CharacterUtilities.LEFT_BOTTOM_CORNER;
 
-            else if (j == _gameBoard.GetLength(1) - 1)
-                _gameBoard[i, j] = CharacterUtilities.RIGHT_BOTOOM_CORNER;
+            else if (j == gameBoard.GetLength(1) - 1)
+                gameBoard[i, j] = CharacterUtilities.RIGHT_BOTOOM_CORNER;
         }
 
-        private void HandleLeftRightEdges(int i, int j)
+        private void HandleLeftRightEdges(char[,] gameBoard, int i, int j)
         {
-            if ((j == 0) || j == _gameBoard.GetLength(1) - 1)
-                _gameBoard[i, j] = CharacterUtilities.LEFT_AND_RIGHT_EDGES;
+            if ((j == 0) || j == gameBoard.GetLength(1) - 1)
+                gameBoard[i, j] = CharacterUtilities.LEFT_AND_RIGHT_EDGES;
         }
+        #endregion
     }
 }

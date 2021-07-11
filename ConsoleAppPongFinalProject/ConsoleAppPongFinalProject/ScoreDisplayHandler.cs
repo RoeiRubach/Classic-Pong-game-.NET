@@ -2,12 +2,32 @@
 
 namespace ConsoleAppPongFinalProject
 {
-    public class ScoreDisplayHandler
+    class ScoreDisplayHandler
     {
-        public void PrintCurrentScore(int currentScore, int location)
+        private const int RIGHT_SIDE_SCORE_LOCATION = 83;
+
+        public ScoreDisplayHandler()
         {
+            ResetBothScores();
+            Player.PlayerScored += PrintCurrentScore;
+        }
+
+        private void ResetBothScores()
+        {
+            PrintCurrentScore(0, 0);
+            PrintCurrentScore(0, RIGHT_SIDE_SCORE_LOCATION);
+        }
+
+        public void PrintCurrentScore(int scoreToDisplay, int playerNum)
+        {
+            int location;
+            if (playerNum == 1)
+                location = 0;
+            else
+                location = RIGHT_SIDE_SCORE_LOCATION;
+
             ClearScore(location);
-            switch (currentScore)
+            switch (scoreToDisplay)
             {
                 case 0:
                     PrintZero(location);

@@ -2,8 +2,10 @@
 
 namespace ConsoleAppPongFinalProject
 {
-    public class BoardManager
+    class BoardManager
     {
+        public static event Action CollisionDetected;
+
         private const int FIELD_HIGHT = 23;
         private const int FIELD_WIDTH = 90;
 

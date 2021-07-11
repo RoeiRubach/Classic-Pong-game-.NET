@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ConsoleAppPongFinalProject
+﻿namespace ConsoleAppPongFinalProject
 {
-    public class AutoPlayer : Player, IMoveable
+    class AutoPlayer : Player
     {
         bool isReachTop = false;
 
         public AutoPlayer() : base()
         {
+            playerNum = 2;
             Point.SetSecondPuddlePosition();
+            GameManager.UpdateUnits += HandleMovement;
+            Ball.PaddleCollisionDetected += OnPaddleCollision;
         }
 
-        public void HandleMovement()
+        private void HandleMovement()
         {
             if (BoardManager.CheckPlayerOutFieldAbove(Point) && (!isReachTop))
                 MoveUp();
 
-            else if (BoardManager.CheckPlayerOutFieldAbove(Point))
+            else if (BoardManager.CheckPlayerOutFieldBelow(Point))
             {
                 isReachTop = true;
                 MoveDown();

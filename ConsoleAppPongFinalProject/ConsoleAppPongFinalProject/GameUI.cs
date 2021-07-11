@@ -2,7 +2,7 @@
 
 namespace ConsoleAppPongFinalProject
 {
-    public class GameUI
+    class GameUI
     {
         public string PlayerOne;
         public string PlayerTwo;
@@ -19,7 +19,7 @@ namespace ConsoleAppPongFinalProject
         /// </summary>
         /// <param name="userChoice"></param>
         /// <returns></returns>
-        public void MainMenu(ref UserChoice userChoice)
+        public void SetUserChoice()
         {
             _topForCursorIcon = 3;
             bool isPressed = false;
@@ -27,10 +27,8 @@ namespace ConsoleAppPongFinalProject
 
             do
             {
-                Console.ForegroundColor = ConsoleColor.Blue;
                 UserInterfaceUtilities.PrintPongTitle();
-                Console.ForegroundColor = ConsoleColor.White;
-                PrintTitles();
+                UserInterfaceUtilities.PrintTitles();
 
                 ConsoleKeyInfo key = Console.ReadKey(true);
                 switch (key.Key)
@@ -55,27 +53,25 @@ namespace ConsoleAppPongFinalProject
                         switch (_topForCursorIcon)
                         {
                             case (int)UserOptions.SoloPlayer:
-                                _instructions.ClearBoard();
-                                PlayerOne = _instructions.SetPlayerName(1);
-                                _instructions.PrintPlayerOneInstructions(PlayerOne);
+                                PlayerOne = SetPlayerName(1);
+                                _instructions.PrintSoloPlayerInstructions(PlayerOne);
                                 UserInterfaceUtilities.PrintPressToStart();
-                                userChoice = UserChoice.SinglePlayer;
+                                GameManager.UserChoice = UserChoice.SinglePlayer;
                                 break;
 
                             case (int)UserOptions.PvP:
-                                _instructions.ClearBoard();
-                                PlayerOne = _instructions.SetPlayerName(1);
-                                PlayerTwo = _instructions.SetPlayerName(2);
-                                _instructions.PrintPlayerTwoInstructions(PlayerOne, PlayerTwo);
+                                PlayerOne = SetPlayerName(1);
+                                PlayerTwo = SetPlayerName(2);
+                                _instructions.PrintPVPInstructions(PlayerOne, PlayerTwo);
                                 UserInterfaceUtilities.PrintPressToStart();
-                                userChoice = UserChoice.PlayerVSPlayer;
+                                GameManager.UserChoice = UserChoice.PlayerVSPlayer;
                                 break;
 
                             case (int)UserOptions.Highscore:
                                 UserInterfaceUtilities.PrintHighscoreAsTitle();
                                 _highscore.HighscoreReader();
                                 Console.ReadKey(true);
-                                MainMenu(ref userChoice);
+                                SetUserChoice();
                                 break;
                         }
                         isPressed = true;
@@ -89,12 +85,27 @@ namespace ConsoleAppPongFinalProject
             } while (!isPressed);
         }
 
-        private static void PrintTitles()
+        private string SetPlayerName(int whichPlayer)
         {
-            UserInterfaceUtilities.PrintOnePlayer();
-            UserInterfaceUtilities.PrintTwoPlayers();
-            UserInterfaceUtilities.PrintHighScore();
-            UserInterfaceUtilities.MainMenuInstructions();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            DisplayNameWriting(whichPlayer);
+            string playerName = Console.ReadLine();
+            Console.ForegroundColor = ConsoleColor.White;
+            return playerName;
+        }
+
+        private void DisplayNameWriting(int whichPlayer)
+        {
+            Console.SetCursorPosition(3, 7);
+            switch (whichPlayer)
+            {
+                case 1:
+                    Console.Write("Enter -first player- name: ");
+                    break;
+                case 2:
+                    Console.Write("Enter -second player- name: ");
+                    break;
+            }
         }
 
         private void DrawCursor()

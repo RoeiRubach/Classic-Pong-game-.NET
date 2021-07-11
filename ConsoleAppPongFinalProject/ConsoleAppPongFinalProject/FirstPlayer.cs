@@ -1,16 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleAppPongFinalProject
 {
-    public class FirstPlayer : Player, IMoveable
+    class FirstPlayer : Player, IMoveable
     {
         public FirstPlayer() : base()
         {
+            playerNum = 1;
+            PlayerName = null;
+            GoalCount = 0;
+            scoreDisplayHandler = new ScoreDisplayHandler();
             Point.SetFirstPuddlePosition();
+            Ball.PaddleCollisionDetected += OnPaddleCollision;
+            Ball.GoalScored += OnGoalScored;
         }
 
         public void HandleMovement()
