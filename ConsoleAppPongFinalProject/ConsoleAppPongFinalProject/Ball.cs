@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ConsoleAppPongFinalProject
+﻿namespace ConsoleAppPongFinalProject
 {
     class Ball
     {
-        public int xAxis { get; set; }
-        public int yAxis { get; set; }
+        public int XAxis { get; set; }
+        public int YAxis { get; set; }
 
         public Ball(int x, int y)
         {
-            xAxis = x;
-            yAxis = y;
+            XAxis = x;
+            YAxis = y;
         }
 
-        public void SetsTheBallPosition(char[,] gameField)
+        public void SetBallPosition(char[,] gameField)
         {
-            gameField[yAxis, xAxis] = GameManager.ballIcon;
+            gameField[YAxis, XAxis] = GameManager.BALL_ICON;
         }
     }
 }

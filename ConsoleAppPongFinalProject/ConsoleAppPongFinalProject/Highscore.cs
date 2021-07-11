@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace ConsoleAppPongFinalProject
 {
     class Highscore
     {
-        string pathString = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Highscores.txt");
+        private readonly string _path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Highscores.txt");
 
         public void PrintsHighscoreAsTitle()
         {
@@ -32,7 +28,7 @@ namespace ConsoleAppPongFinalProject
         public void HighscoreWriter(string playerName, int firstPlayerGoalCount, int autoGoalCount)
         {
             string winningTime = DateTime.Now.ToString("HH:mm_dd-MM-yyyy");
-            using (StreamWriter highscoreFile = new StreamWriter(pathString, true))
+            using (StreamWriter highscoreFile = new StreamWriter(_path, true))
             {
                 highscoreFile.WriteLine('-' + playerName + "- has beated the Computer for: " + firstPlayerGoalCount + " to " + autoGoalCount + " - " + winningTime);
             }
@@ -42,7 +38,7 @@ namespace ConsoleAppPongFinalProject
         public void HighscoreWriter(string firstPlayerName, string secondPlayerName ,int firstPlayerGoalCount, int secondPlayerGoalCount)
         {
             string winningTime = DateTime.Now.ToString("HH:mm_dd-MM-yyyy");
-            using (StreamWriter highscoreFile = new StreamWriter(pathString, true))
+            using (StreamWriter highscoreFile = new StreamWriter(_path, true))
             {
                 if (firstPlayerGoalCount > secondPlayerGoalCount)
                 {
@@ -58,9 +54,9 @@ namespace ConsoleAppPongFinalProject
         public void HighscoreReader()
         {
             int topForSetCursor = 7, leftForSetCursor = 20;
-            if (File.Exists(pathString))
+            if (File.Exists(_path))
             {
-                using (StreamReader highscoreFile = new StreamReader(pathString))
+                using (StreamReader highscoreFile = new StreamReader(_path))
                 {
                     while (true)
                     {
@@ -84,7 +80,7 @@ namespace ConsoleAppPongFinalProject
                         Console.SetCursorPosition(0, 27);
                         Console.WriteLine("Your high scores has been deleted.");
                         Console.ForegroundColor = ConsoleColor.White;
-                        File.Delete(pathString);
+                        File.Delete(_path);
                         break;
                     default:
                         Console.SetCursorPosition(0, 27);

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ConsoleAppPongFinalProject
+﻿namespace ConsoleAppPongFinalProject
 {
     enum UserChoice
     {
@@ -13,7 +7,7 @@ namespace ConsoleAppPongFinalProject
         MultiPlayers
     }
 
-    enum CollidedWithBall
+    enum PaddleEdge
     {
         None,
         UpperEdge,

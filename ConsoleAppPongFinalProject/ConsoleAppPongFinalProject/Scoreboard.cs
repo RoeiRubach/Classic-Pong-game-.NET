@@ -1,14 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleAppPongFinalProject
 {
     class Scoreboard
     {
-        private void PrintsZero(int location)
+        public void PrintScore(int currentScore, int location)
+        {
+            ClearScore(location);
+            switch (currentScore)
+            {
+                case 0:
+                    PrintZero(location);
+                    break;
+                case 1:
+                    PrintOne(location);
+                    break;
+                case 2:
+                    PrintTwo(location);
+                    break;
+                case 3:
+                    PrintThree(location);
+                    break;
+                case 4:
+                    PrintFour(location);
+                    break;
+                case 5:
+                    PrintFive(location);
+                    break;
+            }
+        }
+
+        private void PrintZero(int location)
         {
             Console.SetCursorPosition(location, 0);
             Console.WriteLine("   __  ");
@@ -20,7 +42,7 @@ namespace ConsoleAppPongFinalProject
             Console.WriteLine("  \\__/ ");
         }
 
-        private void PrintsOne(int location)
+        private void PrintOne(int location)
         {
             Console.SetCursorPosition(location, 0);
             Console.WriteLine("  _ ");
@@ -32,7 +54,7 @@ namespace ConsoleAppPongFinalProject
             Console.WriteLine(" |_|");
         }
 
-        private void PrintsTwo(int location)
+        private void PrintTwo(int location)
         {
             Console.SetCursorPosition(location, 0);
             Console.WriteLine("  ___ ");
@@ -44,7 +66,7 @@ namespace ConsoleAppPongFinalProject
             Console.WriteLine(" /___|");
         }
 
-        private void PrintsThree(int location)
+        private void PrintThree(int location)
         {
             Console.SetCursorPosition(location, 0);
             Console.WriteLine("  ____");
@@ -56,7 +78,7 @@ namespace ConsoleAppPongFinalProject
             Console.WriteLine(" |___/");
         }
 
-        private void PrintsFour(int location)
+        private void PrintFour(int location)
         {
             Console.SetCursorPosition(location, 0);
             Console.WriteLine("  _ _  ");
@@ -68,7 +90,7 @@ namespace ConsoleAppPongFinalProject
             Console.WriteLine("   |_| ");
         }
 
-        private void PrintsFive(int location)
+        private void PrintFive(int location)
         {
             Console.SetCursorPosition(location, 0);
             Console.WriteLine("  ___ ");
@@ -80,7 +102,7 @@ namespace ConsoleAppPongFinalProject
             Console.WriteLine(" |___/");
         }
 
-        private void ClearTheScore(int location)
+        private void ClearScore(int location)
         {
             Console.SetCursorPosition(location, 0);
             Console.WriteLine("\t\t");
@@ -90,32 +112,6 @@ namespace ConsoleAppPongFinalProject
             Console.WriteLine("\t\t");
             Console.SetCursorPosition(location, 3);
             Console.WriteLine("\t\t");
-        }
-
-        public void GetsTheScore(int currentScore, int location)
-        {
-            ClearTheScore(location);
-            switch (currentScore)
-            {
-                case 0:
-                    PrintsZero(location);
-                    break;
-                case 1:
-                    PrintsOne(location);
-                    break;
-                case 2:
-                    PrintsTwo(location);
-                    break;
-                case 3:
-                    PrintsThree(location);
-                    break;
-                case 4:
-                    PrintsFour(location);
-                    break;
-                case 5:
-                    PrintsFive(location);
-                    break;
-            }
         }
     }
 }

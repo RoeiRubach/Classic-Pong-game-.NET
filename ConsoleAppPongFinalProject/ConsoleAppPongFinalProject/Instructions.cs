@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleAppPongFinalProject
 {
     class Instructions
     {
-        public void ClearsTheBoard()
+        public void ClearBoard()
         {
             for (int i = 0; i < 33; i++)
             {
@@ -20,24 +16,24 @@ namespace ConsoleAppPongFinalProject
             }
         }
 
-        public void Prints1PlayerInstructions(string player)
+        public void PrintPlayerOneInstructions(string player)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
-            PrintsPlayer1Controls(player);
-            PrintsScoreInstruction();
+            PrintPlayerOneControls(player);
+            PrintRules();
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public void Prints2PlayersInstructions(string player1, string player2)
+        public void PrintPlayerTwoInsructions(string player1, string player2)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
-            PrintsPlayer1Controls(player1);
-            PrintsPlayer2Controls(player2);
-            PrintsScoreInstruction();
+            PrintPlayerOneControls(player1);
+            PrintPlayerTwoControls(player2);
+            PrintRules();
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        private string PrintsPlayer1Controls(string player1)
+        private string PrintPlayerOneControls(string player1)
         {
             Console.SetCursorPosition(3, 7);
             Console.WriteLine(player1 + ": ");
@@ -48,7 +44,7 @@ namespace ConsoleAppPongFinalProject
             return player1;
         }
 
-        private void PrintsPlayer2Controls(string player2)
+        private void PrintPlayerTwoControls(string player2)
         {
             Console.SetCursorPosition(3, 11);
             Console.WriteLine(player2 + ": ");
@@ -58,7 +54,7 @@ namespace ConsoleAppPongFinalProject
             Console.WriteLine("Use -W- to move the paddle up and -S- to move the paddle down.");
         }
 
-        private void PrintsScoreInstruction()
+        private void PrintRules()
         {
             Console.SetCursorPosition(16,15);
             Console.WriteLine("Points are scored when your opponent misses the ball.");
@@ -66,7 +62,7 @@ namespace ConsoleAppPongFinalProject
             Console.WriteLine("First player to reach 5 points wins the game.");
         }
 
-        public string SetsPlayerName(int whichPlayer)
+        public string SetPlayerName(int whichPlayer)
         {
             //Gets an integer to set a string value to player 1/2 with a switch statement and returns it.
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -84,7 +80,7 @@ namespace ConsoleAppPongFinalProject
                     break;
             }
             playerName = Console.ReadLine();
-            ClearsTheBoard();
+            ClearBoard();
             Console.ForegroundColor = ConsoleColor.White;
             return playerName;
         }

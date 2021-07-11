@@ -5,3 +5,10 @@ C:\Users\rruba\source\repos\ConsoleAppPongFinalProject\ConsoleAppPongFinalProjec
 C:\Users\rruba\source\repos\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\obj\Debug\ConsoleAppPongFinalProject.csproj.CoreCompileInputs.cache
 C:\Users\rruba\source\repos\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\obj\Debug\ConsoleAppPongFinalProject.exe
 C:\Users\rruba\source\repos\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\obj\Debug\ConsoleAppPongFinalProject.pdb
+D:\Visual Studio projects\Pong-game-Final-project\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\bin\Debug\ConsoleAppPongFinalProject.exe.config
+D:\Visual Studio projects\Pong-game-Final-project\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\bin\Debug\ConsoleAppPongFinalProject.exe
+D:\Visual Studio projects\Pong-game-Final-project\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\bin\Debug\ConsoleAppPongFinalProject.pdb
+D:\Visual Studio projects\Pong-game-Final-project\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\obj\Debug\ConsoleAppPongFinalProject.csprojAssemblyReference.cache
+D:\Visual Studio projects\Pong-game-Final-project\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\obj\Debug\ConsoleAppPongFinalProject.csproj.CoreCompileInputs.cache
+D:\Visual Studio projects\Pong-game-Final-project\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\obj\Debug\ConsoleAppPongFinalProject.exe
+D:\Visual Studio projects\Pong-game-Final-project\ConsoleAppPongFinalProject\ConsoleAppPongFinalProject\obj\Debug\ConsoleAppPongFinalProject.pdb
