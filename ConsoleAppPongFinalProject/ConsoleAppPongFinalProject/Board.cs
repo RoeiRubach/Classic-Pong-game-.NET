@@ -11,7 +11,7 @@
                 {
                     if (i == 0)
                     {
-                        gameField[i, j] = GameManager.TOP_BOTTOM_EDGE_ICON;
+                        gameField[i, j] = CharacterUtilities.TOP_BOTTOM_EDGE_ICON;
                         if (j == 0)
                         {
                             gameField[i, j] = '╔';
@@ -23,7 +23,7 @@
                     }
                     else if (i == gameField.GetLength(0) - 1)
                     {
-                        gameField[i, j] = GameManager.TOP_BOTTOM_EDGE_ICON;
+                        gameField[i, j] = CharacterUtilities.TOP_BOTTOM_EDGE_ICON;
                         if (j == 0)
                         {
                             gameField[i, j] = '╚';
@@ -38,7 +38,7 @@
                         gameField[i, j] = ' ';
                         if ((j == 0) || j == gameField.GetLength(1) - 1)
                         {
-                            gameField[i, j] = GameManager.LEFT_RIGHT_EDGE_ICON;
+                            gameField[i, j] = CharacterUtilities.LEFT_RIGHT_EDGE_ICON;
                         }
                     }
                 }

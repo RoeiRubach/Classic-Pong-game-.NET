@@ -13,7 +13,7 @@
 
         public void SetBallPosition(char[,] gameField)
         {
-            gameField[YAxis, XAxis] = GameManager.BALL_ICON;
+            gameField[YAxis, XAxis] = CharacterUtilities.BALL_ICON;
         }
     }
 }

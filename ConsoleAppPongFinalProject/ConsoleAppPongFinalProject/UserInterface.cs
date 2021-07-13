@@ -110,7 +110,7 @@ namespace ConsoleAppPongFinalProject
             }
             Console.SetCursorPosition(leftForCursor, topForCursor);
             Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write(GameManager.CURSOR_ICON);
+            Console.Write(CharacterUtilities.CURSOR_ICON);
             Console.ForegroundColor = ConsoleColor.White;
         }
 

@@ -59,7 +59,7 @@ namespace ConsoleAppPongFinalProject
             Console.SetCursorPosition(16,15);
             Console.WriteLine("Points are scored when your opponent misses the ball.");
             Console.SetCursorPosition(17,16);
-            Console.WriteLine("First player to reach 5 points wins the game.");
+            Console.WriteLine($"First player to reach {GameManager.GOALS_TO_REACH} points wins the game.");
         }
 
         public string SetPlayerName(int whichPlayer)
@@ -75,8 +75,6 @@ namespace ConsoleAppPongFinalProject
                     break;
                 case 2:
                     Console.Write("Enter -player2's- name: ");
-                    break;
-                default:
                     break;
             }
             playerName = Console.ReadLine();

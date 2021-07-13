@@ -5,12 +5,6 @@ namespace ConsoleAppPongFinalProject
 {
     class GameManager
     {
-        public const char BALL_ICON = 'o';
-        public const char CURSOR_ICON = '■';
-        public const char PLAYER_ICON = '█';
-        public const char TOP_BOTTOM_EDGE_ICON = '═';
-        public const char LEFT_RIGHT_EDGE_ICON = '║';
-        public const char EMPTY_PIXEL = ' ';
         public const int FIELD_HIGHT = 23;
         public const int FIELD_WIDTH = 90;
         public const int GOALS_TO_REACH = 5;
@@ -87,19 +81,19 @@ namespace ConsoleAppPongFinalProject
                 {
                     case ConsoleKey.UpArrow:
                         //Checks if the FirstPlayer gets out the border.
-                        if (_gameField[_firstPlayer.YAxis - 1, _firstPlayer.XAxis] != GameManager.TOP_BOTTOM_EDGE_ICON)
+                        if (_gameField[_firstPlayer.YAxis - 1, _firstPlayer.XAxis] != CharacterUtilities.TOP_BOTTOM_EDGE_ICON)
                         {
                             _firstPlayer.YAxis--;
-                            _gameField[_firstPlayer.YAxis + 5, _firstPlayer.XAxis] = EMPTY_PIXEL;
+                            _gameField[_firstPlayer.YAxis + 5, _firstPlayer.XAxis] = CharacterUtilities.EMPTY_PIXEL;
                         }
                         _firstPlayer.SetFirstPlayerPosition(_gameField);
                         break;
                     case ConsoleKey.DownArrow:
                         //Checks if the FirstPlayer gets out the border.
-                        if (_gameField[_firstPlayer.YAxis + 5, _firstPlayer.XAxis] != GameManager.TOP_BOTTOM_EDGE_ICON)
+                        if (_gameField[_firstPlayer.YAxis + 5, _firstPlayer.XAxis] != CharacterUtilities.TOP_BOTTOM_EDGE_ICON)
                         {
                             _firstPlayer.YAxis++;
-                            _gameField[_firstPlayer.YAxis - 1, _firstPlayer.XAxis] = EMPTY_PIXEL;
+                            _gameField[_firstPlayer.YAxis - 1, _firstPlayer.XAxis] = CharacterUtilities.EMPTY_PIXEL;
                         }
                         _firstPlayer.SetFirstPlayerPosition(_gameField);
                         break;
@@ -126,37 +120,37 @@ namespace ConsoleAppPongFinalProject
                 {
                     case ConsoleKey.UpArrow:
                         //Checks if the FirstPlayer gets out the border.
-                        if (_gameField[_firstPlayer.YAxis - 1, _firstPlayer.XAxis] != GameManager.TOP_BOTTOM_EDGE_ICON)
+                        if (_gameField[_firstPlayer.YAxis - 1, _firstPlayer.XAxis] != CharacterUtilities.TOP_BOTTOM_EDGE_ICON)
                         {
                             _firstPlayer.YAxis--;
-                            _gameField[_firstPlayer.YAxis + 5, _firstPlayer.XAxis] = EMPTY_PIXEL;
+                            _gameField[_firstPlayer.YAxis + 5, _firstPlayer.XAxis] = CharacterUtilities.EMPTY_PIXEL;
                         }
                         _firstPlayer.SetFirstPlayerPosition(_gameField);
                         break;
                     case ConsoleKey.DownArrow:
                         //Checks if the FirstPlayer gets out the border.
-                        if (_gameField[_firstPlayer.YAxis + 5, _firstPlayer.XAxis] != GameManager.TOP_BOTTOM_EDGE_ICON)
+                        if (_gameField[_firstPlayer.YAxis + 5, _firstPlayer.XAxis] != CharacterUtilities.TOP_BOTTOM_EDGE_ICON)
                         {
                             _firstPlayer.YAxis++;
-                            _gameField[_firstPlayer.YAxis - 1, _firstPlayer.XAxis] = EMPTY_PIXEL;
+                            _gameField[_firstPlayer.YAxis - 1, _firstPlayer.XAxis] = CharacterUtilities.EMPTY_PIXEL;
                         }
                         _firstPlayer.SetFirstPlayerPosition(_gameField);
                         break;
                     case ConsoleKey.W:
                         //Checks if the SecondPlayer gets out the border.
-                        if (_gameField[_secondPlayer.YAxis - 1, _secondPlayer.XAxis] != GameManager.TOP_BOTTOM_EDGE_ICON)
+                        if (_gameField[_secondPlayer.YAxis - 1, _secondPlayer.XAxis] != CharacterUtilities.TOP_BOTTOM_EDGE_ICON)
                         {
                             _secondPlayer.YAxis--;
-                            _gameField[_secondPlayer.YAxis + 5, _secondPlayer.XAxis] = EMPTY_PIXEL;
+                            _gameField[_secondPlayer.YAxis + 5, _secondPlayer.XAxis] = CharacterUtilities.EMPTY_PIXEL;
                         }
                         _secondPlayer.SetSecondPlayerPosition(_gameField);
                         break;
                     case ConsoleKey.S:
                         //Checks if the SecondPlayer gets out the border.
-                        if (_gameField[_secondPlayer.YAxis + 5, _secondPlayer.XAxis] != GameManager.TOP_BOTTOM_EDGE_ICON)
+                        if (_gameField[_secondPlayer.YAxis + 5, _secondPlayer.XAxis] != CharacterUtilities.TOP_BOTTOM_EDGE_ICON)
                         {
                             _secondPlayer.YAxis++;
-                            _gameField[_secondPlayer.YAxis - 1, _secondPlayer.XAxis] = EMPTY_PIXEL;
+                            _gameField[_secondPlayer.YAxis - 1, _secondPlayer.XAxis] = CharacterUtilities.EMPTY_PIXEL;
                         }
                         _secondPlayer.SetSecondPlayerPosition(_gameField);
                         break;
@@ -205,7 +199,7 @@ namespace ConsoleAppPongFinalProject
             _isFirstPlayer = false;
             _isAI = false;
             _isGoal = false;
-            char temp = EMPTY_PIXEL;
+            char temp = CharacterUtilities.EMPTY_PIXEL;
             int ballXDiraction = 1, ballYDiraction = 0;
             //First score for the manual player.
             _scoreboard.PrintScore(0, 0);
@@ -218,7 +212,7 @@ namespace ConsoleAppPongFinalProject
                 {
                     CheckWhoScored(_isFirstPlayer);
                     _gameField[_ball.YAxis, _ball.XAxis] = temp;
-                    temp = EMPTY_PIXEL;
+                    temp = CharacterUtilities.EMPTY_PIXEL;
 
                     CreateBallInconsistently(ref ballYDiraction, ref ballXDiraction, _isPVP);
                     SetAIAtMid();
@@ -276,7 +270,7 @@ namespace ConsoleAppPongFinalProject
             _isFirstPlayer = false;
             _isAI = false;
             _isGoal = false;
-            char temp = EMPTY_PIXEL;
+            char temp = CharacterUtilities.EMPTY_PIXEL;
             int ballXDiraction = 1, ballYDiraction = 0;
             //First score for the first player.
             _scoreboard.PrintScore(0, 0);
@@ -289,7 +283,7 @@ namespace ConsoleAppPongFinalProject
                 {
                     CheckWhoScored(_isFirstPlayer , _isPVP);
                     _gameField[_ball.YAxis, _ball.XAxis] = temp;
-                    temp = EMPTY_PIXEL;
+                    temp = CharacterUtilities.EMPTY_PIXEL;
 
                     CreateBallInconsistently(ref ballYDiraction, ref ballXDiraction, _isPVP);
 
@@ -406,17 +400,17 @@ namespace ConsoleAppPongFinalProject
         private void HandleAIMovement(ref bool isReachTop)
         {
             //Checks if the paddle reached the upper edge.
-            if ((_gameField[_autoPlayer.YAxis - 1, _autoPlayer.XAxis] != GameManager.TOP_BOTTOM_EDGE_ICON) && (!isReachTop))
+            if ((_gameField[_autoPlayer.YAxis - 1, _autoPlayer.XAxis] != CharacterUtilities.TOP_BOTTOM_EDGE_ICON) && (!isReachTop))
             {
                 _autoPlayer.YAxis--;
-                _gameField[_autoPlayer.YAxis + 5, _autoPlayer.XAxis] = EMPTY_PIXEL;
+                _gameField[_autoPlayer.YAxis + 5, _autoPlayer.XAxis] = CharacterUtilities.EMPTY_PIXEL;
             }
             //Checks if the paddle reached the bottom edge.
-            else if (_gameField[_autoPlayer.YAxis + 5, _autoPlayer.XAxis] != GameManager.TOP_BOTTOM_EDGE_ICON)
+            else if (_gameField[_autoPlayer.YAxis + 5, _autoPlayer.XAxis] != CharacterUtilities.TOP_BOTTOM_EDGE_ICON)
             {
                 isReachTop = true;
                 _autoPlayer.YAxis++;
-                _gameField[_autoPlayer.YAxis - 1, _autoPlayer.XAxis] = EMPTY_PIXEL;
+                _gameField[_autoPlayer.YAxis - 1, _autoPlayer.XAxis] = CharacterUtilities.EMPTY_PIXEL;
             }
             else
             {
@@ -431,7 +425,7 @@ namespace ConsoleAppPongFinalProject
             bool isNothing = false;
 
             //Checks if the ball collided with a paddle.
-            if (temp == GameManager.PLAYER_ICON)
+            if (temp == CharacterUtilities.PLAYER_ICON)
             {
                 PaddleEdge collidedWithBall = PaddleEdge.None;
                 WhichPaddleEdgeCollidedWithBall(ref collidedWithBall);
@@ -451,13 +445,13 @@ namespace ConsoleAppPongFinalProject
             }
 
             //Checks if the ball collided with the top/bottom edge.
-            else if (temp == GameManager.TOP_BOTTOM_EDGE_ICON)
+            else if (temp == CharacterUtilities.TOP_BOTTOM_EDGE_ICON)
             {
                 yDiraction *= (-1);
             }
 
             //Checks if the ball collided with the left/right edge - if so, checks which side of the edge the ball collided with -> Saves the result -> returns that a goal has occurred.
-            else if (temp == GameManager.LEFT_RIGHT_EDGE_ICON)
+            else if (temp == CharacterUtilities.LEFT_RIGHT_EDGE_ICON)
             {
                 if (_ball.XAxis >= 89)
                 {
@@ -536,19 +530,19 @@ namespace ConsoleAppPongFinalProject
         private void KeepWantedIcon(char temp)
         {
 
-            if (temp == GameManager.PLAYER_ICON)
+            if (temp == CharacterUtilities.PLAYER_ICON)
             {
                 _gameField[_ball.YAxis, _ball.XAxis] = temp;
                 return;
             }
-            else if (temp == GameManager.TOP_BOTTOM_EDGE_ICON)
+            else if (temp == CharacterUtilities.TOP_BOTTOM_EDGE_ICON)
             {
                 _gameField[_ball.YAxis, _ball.XAxis] = temp;
                 return;
             }
             else
             {
-                _gameField[_ball.YAxis, _ball.XAxis] = EMPTY_PIXEL;
+                _gameField[_ball.YAxis, _ball.XAxis] = CharacterUtilities.EMPTY_PIXEL;
             }
         }
 
@@ -636,7 +630,7 @@ namespace ConsoleAppPongFinalProject
 
         private void ResetBallValue()
         {
-            _gameField[_ball.YAxis, _ball.XAxis] = EMPTY_PIXEL;
+            _gameField[_ball.YAxis, _ball.XAxis] = CharacterUtilities.EMPTY_PIXEL;
             //The next 3 lines resets the ball's coordinates.
             _ball.YAxis = (FIELD_HIGHT / 2);
             _ball.XAxis = (FIELD_WIDTH / 2);

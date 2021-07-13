@@ -17,7 +17,7 @@
             _yDiraction = YAxis;
             for (int i = 0; i < 5; i++)
             {
-                gameField[_yDiraction, XAxis] = GameManager.PLAYER_ICON;
+                gameField[_yDiraction, XAxis] = CharacterUtilities.PLAYER_ICON;
                 _yDiraction++;
             }
         }
