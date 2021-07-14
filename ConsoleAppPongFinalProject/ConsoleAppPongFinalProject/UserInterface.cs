@@ -28,12 +28,7 @@ namespace ConsoleAppPongFinalProject
 
             do
             {
-                PrintPlayerOne();
-                PrintPlayerTwo();
-                PrintHighscore();
-                Console.ForegroundColor = ConsoleColor.Blue;
-                PrintPongTitle();
-                Console.ForegroundColor = ConsoleColor.White;
+                PrintTitles();
                 MainMenuInstructions();
 
                 ConsoleKeyInfo key = Console.ReadKey(true);
@@ -99,6 +94,22 @@ namespace ConsoleAppPongFinalProject
             } while (!isPressed);
         }
 
+        private void PrintTitles()
+        {
+            PrintPongTitle();
+            PrintPlayerOne();
+            PrintPlayerTwo();
+            PrintHighscore();
+        }
+
+        public void PrintWinner(string winner)
+        {
+            Console.SetCursorPosition(36, 15);
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine(winner + " wins!");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
         private void CursorLook(ref int leftForCursor, ref int topForCursor)
         {
             //9 = Next to 1Player. 15 = Next to 2Players. 21 = Next to Highscore.
@@ -158,6 +169,7 @@ namespace ConsoleAppPongFinalProject
 
         public void PrintPongTitle()
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.SetCursorPosition(33, 0);
             Console.Write("  ___  ___  _  _  ___ ");
             Console.SetCursorPosition(33, 1);
@@ -166,6 +178,7 @@ namespace ConsoleAppPongFinalProject
             Console.Write(" |  _/ (_) | .` | (_ |");
             Console.SetCursorPosition(33, 3);
             Console.WriteLine(" |_|  \\___/|_|\\_|\\___|");
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         private void PrintPressToStart()
