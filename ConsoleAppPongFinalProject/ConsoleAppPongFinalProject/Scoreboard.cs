@@ -6,8 +6,8 @@ namespace ConsoleAppPongFinalProject
     {
         public Scoreboard()
         {
-            PrintScore(0, 0);
-            PrintScore(0, location: 83);
+            PrintScore(currentScore: 0, location: 0);
+            PrintScore(currentScore: 0, location: 83);
         }
 
         public void PrintScore(int currentScore, int location)

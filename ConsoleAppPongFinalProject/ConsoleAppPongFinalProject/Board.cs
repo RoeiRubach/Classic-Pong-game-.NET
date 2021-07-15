@@ -2,47 +2,25 @@
 {
     class Board
     {
+        public const int FIELD_HIGHT = 24;
+        public const int FIELD_WIDTH = 90;
+        public const int HalfFieldHight = FIELD_HIGHT / 2;
+        public const int HalfFieldWidth = FIELD_WIDTH / 2;
 
-        public void SetBoard(char[,] gameField)
+        public char[,] GameField;
+
+        public Board()
         {
-            for (int i = 0; i < gameField.GetLength(0); i++)
-            {
-                for (int j = 0; j < gameField.GetLength(1); j++)
-                {
-                    if (i == 0)
-                    {
-                        gameField[i, j] = CharacterUtilities.TOP_BOTTOM_EDGE_ICON;
-                        if (j == 0)
-                        {
-                            gameField[i, j] = '╔';
-                        }
-                        else if (j == gameField.GetLength(1) - 1)
-                        {
-                            gameField[i, j] = '╗';
-                        }
-                    }
-                    else if (i == gameField.GetLength(0) - 1)
-                    {
-                        gameField[i, j] = CharacterUtilities.TOP_BOTTOM_EDGE_ICON;
-                        if (j == 0)
-                        {
-                            gameField[i, j] = '╚';
-                        }
-                        else if (j == gameField.GetLength(1) - 1)
-                        {
-                            gameField[i, j] = '╝';
-                        }
-                    }
-                    else
-                    {
-                        gameField[i, j] = ' ';
-                        if ((j == 0) || j == gameField.GetLength(1) - 1)
-                        {
-                            gameField[i, j] = CharacterUtilities.LEFT_RIGHT_EDGE_ICON;
-                        }
-                    }
-                }
-            }
+            GameField = new char[FIELD_HIGHT, FIELD_WIDTH];
+            GameBorder gameBorder = new GameBorder(GameField);
         }
+
+        public void ClearTopPaddleEdge(int y, int x) => GameField[y - 1, x] = CharacterUtilities.EMPTY_PIXEL;
+
+        public void ClearBottomPaddleEdge(int y, int x) => GameField[y + 5, x] = CharacterUtilities.EMPTY_PIXEL;
+
+        public bool IsPaddleReachBottomBorder(int y, int x) => GameField[y + 5, x] == CharacterUtilities.TOP_BOTTOM_BORDER_ICON;
+
+        public bool IsPaddleReachTopBorder(int y, int x) => GameField[y - 1, x] == CharacterUtilities.TOP_BOTTOM_BORDER_ICON;
     }
 }
