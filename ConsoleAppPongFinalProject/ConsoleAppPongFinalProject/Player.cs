@@ -1,4 +1,6 @@
-﻿namespace ConsoleAppPongFinalProject
+﻿using System;
+
+namespace ConsoleAppPongFinalProject
 {
     class Player
     {
@@ -7,12 +9,21 @@
         public int XAxis { get; set; }
         public int YAxis { get; set; }
 
-        public Player(int x, int y, char[,] gameField)
+        protected Board _board;
+        private static int _playersCount;
+
+        public Player(int x, int y, Board board)
         {
+            _playersCount++;
+            if (_playersCount > 2)
+                _playersCount = 1;
+
             Score = 0;
             XAxis = x;
             YAxis = y;
-            SetPlayerPosition(gameField);
+            Name = SetPlayerName();
+            _board = board;
+            SetPlayerPosition();
         }
 
         public void IncreaseScoreByOne()
@@ -25,10 +36,26 @@
             }
         }
 
-        public void SetPlayerPosition(char[,] gameField)
+        public void SetPlayerPosition()
         {
             for (int i = YAxis; i < YAxis + 5; i++)
-                gameField[i, XAxis] = CharacterUtilities.PLAYER_ICON;
+                _board.GameField[i, XAxis] = CharacterUtilities.PLAYER_ICON;
         }
+
+        private string SetPlayerName()
+        {
+            if (IsSecondUserAndPlaySingle()) return "Computer";
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.SetCursorPosition(3, 7);
+            Console.Write($"Enter -player{_playersCount}'s- name: ");
+
+            string playerName = Console.ReadLine();
+            UIUtilities.ClearTitles();
+            Console.ForegroundColor = ConsoleColor.White;
+            return playerName;
+        }
+
+        private bool IsSecondUserAndPlaySingle() => _playersCount == 2 && GameManager.UserChoice == UserChoice.SinglePlayer;
     }
 }

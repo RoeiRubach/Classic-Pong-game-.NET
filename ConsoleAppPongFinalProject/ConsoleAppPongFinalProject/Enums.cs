@@ -1,10 +1,18 @@
 ﻿namespace ConsoleAppPongFinalProject
 {
+    enum MainMenuOptions
+    {
+        None,
+        SinglePlayer = 9,
+        PVP = 15,
+        Highscore = 21
+    }
+
     enum UserChoice
     {
         None,
         SinglePlayer,
-        MultiPlayers
+        PVP
     }
 
     enum PaddleEdge

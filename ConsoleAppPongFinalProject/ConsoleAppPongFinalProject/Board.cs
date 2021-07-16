@@ -1,4 +1,6 @@
-﻿namespace ConsoleAppPongFinalProject
+﻿using System;
+
+namespace ConsoleAppPongFinalProject
 {
     class Board
     {
@@ -13,6 +15,19 @@
         {
             GameField = new char[FIELD_HIGHT, FIELD_WIDTH];
             GameBorder gameBorder = new GameBorder(GameField);
+        }
+
+        public void PrintGameField()
+        {
+            UIUtilities.PrintPongTitle();
+            for (int i = 0; i < GameField.GetLength(0); i++)
+            {
+                for (int j = 0; j < GameField.GetLength(1); j++)
+                {
+                    Console.Write(GameField[i, j]);
+                }
+                Console.WriteLine();
+            }
         }
 
         public void ClearTopPaddleEdge(int y, int x) => GameField[y - 1, x] = CharacterUtilities.EMPTY_PIXEL;

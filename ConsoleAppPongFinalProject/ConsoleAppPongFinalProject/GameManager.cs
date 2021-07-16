@@ -7,24 +7,23 @@ namespace ConsoleAppPongFinalProject
     {
         public const int GOALS_TO_REACH = 5;
 
+        public static UserChoice UserChoice = UserChoice.None;
+
         private bool _isGoal = false;
         private bool _isGameOver = false;
         private bool _isFirstPlayerScored = false;
-        private bool _isPVP = false;
 
-        private UserInterface _userInterface = new UserInterface();
-        private Scoreboard _scoreboard;
         private Board _board;
         private Ball _ball;
+        private Scoreboard _scoreboard;
         private Player _firstPlayer;
-        private Player _autoPlayer;
+        private AutoPlayer _autoPlayer;
         private Player _secondPlayer;
 
         public GameManager()
         {
             _board = new Board();
-            _ball = new Ball(Board.HalfFieldWidth, Board.HalfFieldHight);
-            _ball.SetBallPosition(_board.GameField);
+            _ball = new Ball(Board.HalfFieldWidth, Board.HalfFieldHight, _board);
         }
 
         public void Start()
@@ -32,28 +31,29 @@ namespace ConsoleAppPongFinalProject
             Console.CursorVisible = false;
             Console.ForegroundColor = ConsoleColor.White;
 
-            GetUserChoice();
+            SetGameMode();
         }
 
-        private void GetUserChoice()
+        private void SetGameMode()
         {
-            UserChoice userChoice = UserChoice.None;
-            _userInterface.MainMenu(ref userChoice);
+            MainMenu mainMenu = new MainMenu();
+            UIUtilities.ClearTitles();
 
-            _firstPlayer = new Player(2, Board.HalfFieldHight - 2, _board.GameField);
+            _firstPlayer = new Player(2, Board.HalfFieldHight - 2, _board);
             Thread mySingleWorker;
 
-            switch (userChoice)
+            switch (UserChoice)
             {
                 case UserChoice.SinglePlayer:
-                    _autoPlayer = new Player(Board.FIELD_WIDTH - 3, Board.HalfFieldHight, _board.GameField);
+                    _autoPlayer = new AutoPlayer(Board.FIELD_WIDTH - 3, Board.HalfFieldHight, _board);
+                    UIUtilities.PrintPlayerInstructions(_firstPlayer.Name);
                     mySingleWorker = new Thread(ThreadFunctionForTheBall_AutoPlayer);
                     mySingleWorker.Start();
                     HandlePlayerInput();
                     break;
-                case UserChoice.MultiPlayers:
-                    _isPVP = true;
-                    _secondPlayer = new Player(Board.FIELD_WIDTH - 3, Board.HalfFieldHight - 2, _board.GameField);
+                case UserChoice.PVP:
+                    _secondPlayer = new Player(Board.FIELD_WIDTH - 3, Board.HalfFieldHight - 2, _board);
+                    UIUtilities.PrintPlayersInsructions(_firstPlayer.Name, _secondPlayer.Name);
                     mySingleWorker = new Thread(ThreadFunctionForTheBall_PVP);
                     mySingleWorker.Start();
                     HandlePlayersInput();
@@ -83,7 +83,7 @@ namespace ConsoleAppPongFinalProject
                         }
                         break;
                 }
-                _firstPlayer.SetPlayerPosition(_board.GameField);
+                _firstPlayer.SetPlayerPosition();
             } while (!_isGameOver);
         }
 
@@ -123,23 +123,10 @@ namespace ConsoleAppPongFinalProject
                         }
                         break;
                 }
-                _firstPlayer.SetPlayerPosition(_board.GameField);
-                _secondPlayer.SetPlayerPosition(_board.GameField);
+                _firstPlayer.SetPlayerPosition();
+                _secondPlayer.SetPlayerPosition();
 
             } while (!_isGameOver);
-        }
-
-        private void PrintGameField()
-        {
-            _userInterface.PrintPongTitle();
-            for (int i = 0; i < _board.GameField.GetLength(0); i++)
-            {
-                for (int j = 0; j < _board.GameField.GetLength(1); j++)
-                {
-                    Console.Write(_board.GameField[i, j]);
-                }
-                Console.WriteLine();
-            }
         }
 
         /// <summary>
@@ -157,58 +144,50 @@ namespace ConsoleAppPongFinalProject
         {
             bool isReachTop = false;
             Console.Clear();
-            char temp = CharacterUtilities.EMPTY_PIXEL;
-            int ballXDiraction = -1, ballYDiraction = 0;
+            char pixel = CharacterUtilities.EMPTY_PIXEL;
             _scoreboard = new Scoreboard();
 
             do
             {
-                HandleAIMovement(ref isReachTop);
-                PrintGameField();
-                IsCollidedWithAnObject(temp, ref ballXDiraction, ref ballYDiraction);
+                _autoPlayer.HandleAIMovement(ref isReachTop);
+                _board.PrintGameField();
+                _ball.IsCollidedWithAnObject(pixel, ref _isFirstPlayerScored, ref _isGoal, _firstPlayer.YAxis, AIY: _autoPlayer.YAxis);
 
                 if (_isGoal)
                 {
-                    SetAIAtMid();
+                    //_autoPlayer.SetAIAtMid();
                     CheckWhoScored(_isFirstPlayerScored);
-                    OnGoalScored(ref temp, ref ballXDiraction, ref ballYDiraction);
+                    OnGoalScored(ref pixel);
 
                     if (IsReachMaxGoals(_firstPlayer.Score))
                     {
                         _isGameOver = true;
-                        _userInterface.PrintWinner(_userInterface.PlayerOne);
+                        UIUtilities.PrintWinner(_firstPlayer.Name);
                         Highscore highscore = new Highscore();
-                        highscore.HighscoreWriter(_userInterface.PlayerOne, _firstPlayer.Score, _autoPlayer.Score);
+                        highscore.HighscoreWriter(_firstPlayer.Name, _firstPlayer.Score, _autoPlayer.Score);
                         break;
                     }
                     else if (IsReachMaxGoals(_autoPlayer.Score))
                     {
                         _isGameOver = true;
-                        _userInterface.PrintWinner("Computer");
+                        UIUtilities.PrintWinner("Computer");
                         Console.SetCursorPosition(30, 16);
-                        Console.WriteLine(_userInterface.PlayerOne + ", good luck next time.");
+                        Console.WriteLine(_firstPlayer.Name + ", good luck next time.");
                         break;
                     }
                 }
 
-                HandleBallMovement(ref temp, ref ballXDiraction, ref ballYDiraction);
+                KeepWantedIcon(pixel);
+                _ball.IncrementBallMovement();
+                pixel = _board.GameField[_ball.YPosition, _ball.XPosition];
+                _ball.SetBallPosition();
 
             } while (!_isGameOver);
 
-            ResetBallValue();
+            _board.GameField[_ball.YPosition, _ball.XPosition] = CharacterUtilities.EMPTY_PIXEL;
+            _ball.ResetBallValue();
             isReachTop = false;
         }
-
-        private void OnGoalScored(ref char temp, ref int ballXDiraction, ref int ballYDiraction)
-        {
-            _board.GameField[_ball.YAxis, _ball.XAxis] = temp;
-            temp = CharacterUtilities.EMPTY_PIXEL;
-            CreateBallInconsistently(ref ballYDiraction, ref ballXDiraction);
-            _isGoal = false;
-            Thread.Sleep(1300);
-        }
-
-        private bool IsReachMaxGoals(int currentGoals) => currentGoals == GOALS_TO_REACH;
 
         /// <summary>
         /// Thread #3 that controls the -ball-.
@@ -224,75 +203,71 @@ namespace ConsoleAppPongFinalProject
         private void ThreadFunctionForTheBall_PVP()
         {
             Console.Clear();
-            char temp = CharacterUtilities.EMPTY_PIXEL;
-            int ballXDiraction = 1, ballYDiraction = 0;
+            char pixel = CharacterUtilities.EMPTY_PIXEL;
             _scoreboard = new Scoreboard();
 
             do
             {
-                PrintGameField();
-                IsCollidedWithAnObject(temp, ref ballXDiraction, ref ballYDiraction);
+                _board.PrintGameField();
+                _ball.IsCollidedWithAnObject(pixel, ref _isFirstPlayerScored, ref _isGoal, _firstPlayer.YAxis, secondPlayerY: _secondPlayer.YAxis);
 
                 if (_isGoal)
                 {
-                    CheckWhoScored(_isFirstPlayerScored, _isPVP);
-                    OnGoalScored(ref temp, ref ballXDiraction, ref ballYDiraction);
+                    CheckWhoScored(_isFirstPlayerScored);
+                    OnGoalScored(ref pixel);
 
                     if (IsReachMaxGoals(_firstPlayer.Score))
                     {
                         _isGameOver = true;
-                        _userInterface.PrintWinner(_userInterface.PlayerOne);
+                        UIUtilities.PrintWinner(_firstPlayer.Name);
                         Highscore highscore = new Highscore();
-                        highscore.HighscoreWriter(_userInterface.PlayerOne, _userInterface.PlayerTwo , _firstPlayer.Score, _secondPlayer.Score);
+                        highscore.HighscoreWriter(_firstPlayer.Name, _secondPlayer.Name, _firstPlayer.Score, _secondPlayer.Score);
                         break;
                     }
                     else if (IsReachMaxGoals(_secondPlayer.Score))
                     {
                         _isGameOver = true;
-                        _userInterface.PrintWinner(_userInterface.PlayerTwo);
+                        UIUtilities.PrintWinner(_secondPlayer.Name);
                         Highscore highscore = new Highscore();
-                        highscore.HighscoreWriter(_userInterface.PlayerOne ,_userInterface.PlayerTwo, _firstPlayer.Score, _secondPlayer.Score);
+                        highscore.HighscoreWriter(_firstPlayer.Name, _secondPlayer.Name, _firstPlayer.Score, _secondPlayer.Score);
                         break;
                     }
                 }
 
-                HandleBallMovement(ref temp, ref ballXDiraction, ref ballYDiraction);
+                KeepWantedIcon(pixel);
+                _ball.IncrementBallMovement();
+                pixel = _board.GameField[_ball.YPosition, _ball.XPosition];
+                _ball.SetBallPosition();
 
             } while (!_isGameOver);
-            ResetBallValue();
+
+            _ball.ResetBallValue();
         }
 
-        private void CreateBallInconsistently(ref int ballYDiraction, ref int ballXDiraction)
+        private void OnGoalScored(ref char pixel)
         {
-            //Spawns the ball at Inconsistently coordinates.
-            _ball.YAxis = RandomNumer() + RandomNumer() + RandomNumer() + RandomNumer() + Board.HalfFieldHight;
-            _ball.XAxis = 2 + RandomNumer() + Board.HalfFieldWidth;
-            ballYDiraction = RandomNumer();
-
-            if (_isPVP)
-                ballXDiraction *= (-1);
-            else
-                ballXDiraction = -1;
-
-            _ball.SetBallPosition(_board.GameField);
+            _board.GameField[_ball.YPosition, _ball.XPosition] = pixel;
+            pixel = CharacterUtilities.EMPTY_PIXEL;
+            _ball.SetBallInconsistently();
+            _isGoal = false;
+            Thread.Sleep(1300);
         }
 
-        private void SetAIAtMid()
-        {
-            //Sets the auto-player's coordinates at the middle field.
-            EraseAIColumnLeftovers(_board.GameField);
-            _autoPlayer.YAxis = Board.HalfFieldHight - 2;
-            _autoPlayer.XAxis = Board.FIELD_WIDTH - 3;
-            _autoPlayer.SetPlayerPosition(_board.GameField);
-        }
+        private bool IsReachMaxGoals(int currentGoals) => currentGoals == GOALS_TO_REACH;
 
         //Score method for the first player aginst the computer.
-        private void CheckWhoScored(bool isSoloPlay)
+        private void CheckWhoScored(bool isFirstPlayerScored)
         {
-            if (isSoloPlay)
+            if (isFirstPlayerScored)
             {
                 _firstPlayer.IncreaseScoreByOne();
                 PrintScore(_firstPlayer.Score, location: 0);
+                return;
+            }
+            else if (UserChoice == UserChoice.PVP)
+            {
+                _secondPlayer.IncreaseScoreByOne();
+                PrintScore(_secondPlayer.Score, location: 83);
             }
             else
             {
@@ -301,160 +276,23 @@ namespace ConsoleAppPongFinalProject
             }
         }
 
-        //Score method for the first player aginst the second player.
-        private void CheckWhoScored(bool isSoloPlay, bool isMultiPlayers)
-        {
-            if (isSoloPlay)
-            {
-                _firstPlayer.IncreaseScoreByOne();
-                PrintScore(_firstPlayer.Score, location: 0);
-            }
-            else
-            {
-                _secondPlayer.IncreaseScoreByOne();
-                PrintScore(_secondPlayer.Score, location: 83);
-            }
-        }
-
-        private void HandleBallMovement(ref char temp, ref int xDiraction, ref int yDiraction)
-        {
-            //Saves the last icon (so it won't be deleted).
-            KeepWantedIcon(temp);
-
-            //Changes the ball -X- and -Y- as needed.
-            _ball.XAxis += xDiraction;
-            _ball.YAxis += yDiraction;
-
-            //Sets the last icon the his previous location.
-            temp = _board.GameField[_ball.YAxis, _ball.XAxis];
-
-            //Sets the ball to his new location.
-            _ball.SetBallPosition(_board.GameField);
-        }
-
-        private void HandleAIMovement(ref bool isReachTop)
-        {
-            if (!_board.IsPaddleReachTopBorder(_autoPlayer.YAxis, _autoPlayer.XAxis) && (!isReachTop))
-            {
-                _autoPlayer.YAxis--;
-                _board.ClearBottomPaddleEdge(_autoPlayer.YAxis, _autoPlayer.XAxis);
-            }
-            else if (!_board.IsPaddleReachBottomBorder(_autoPlayer.YAxis, _autoPlayer.XAxis))
-            {
-                isReachTop = true;
-                _autoPlayer.YAxis++;
-                _board.ClearTopPaddleEdge(_autoPlayer.YAxis, _autoPlayer.XAxis);
-            }
-            else
-                isReachTop = false;
-
-            _autoPlayer.SetPlayerPosition(_board.GameField);
-        }
-
-        private void IsCollidedWithAnObject(char temp, ref int xDiraction, ref int yDiraction)
-        {
-            //Checks if the ball collided with a paddle.
-            if (temp == CharacterUtilities.PLAYER_ICON)
-            {
-                PaddleEdge collidedWithBall = PaddleEdge.None;
-                WhichPaddleEdgeCollidedWithBall(ref collidedWithBall);
-                switch (collidedWithBall)
-                {
-                    case PaddleEdge.UpperEdge:
-                        yDiraction = -1;
-                        break;
-                    case PaddleEdge.MiddleEdge:
-                        yDiraction = 0;
-                        break;
-                    case PaddleEdge.BottomEdge:
-                        yDiraction = 1;
-                        break;
-                }
-                xDiraction *= (-1);
-            }
-
-            //Checks if the ball collided with the top/bottom edge.
-            else if (temp == CharacterUtilities.TOP_BOTTOM_BORDER_ICON)
-                yDiraction *= (-1);
-
-            //Checks if the ball collided with the left/right edge - if so, checks which side of the edge the ball collided with -> Saves the result -> returns that a goal has occurred.
-            else if (temp == CharacterUtilities.LEFT_RIGHT_BORDER_ICON)
-            {
-                if (_ball.XAxis >= 89)
-                    _isFirstPlayerScored = true;
-                else
-                    _isFirstPlayerScored = false;
-
-                _isGoal = true;
-            }
-        }
-
-        private void WhichPaddleEdgeCollidedWithBall(ref PaddleEdge collidedWithBall)
-        {
-            //Gets the last auto-player, first-player and second-player -yAxis- values.
-            int autoTemp = 0, firstPlayerTemp = _firstPlayer.YAxis, secondPlayerTemp = 0;
-
-            if (_isPVP)
-                secondPlayerTemp = _secondPlayer.YAxis;
-            else
-                autoTemp = _autoPlayer.YAxis;
-
-            for (int i = 0; i < 5; i++)
-            {
-                //Checks which part of the paddle collided with the ball - if so, saves that part.
-                //First player and second player paddles.
-                if (_isPVP)
-                {
-                    if (_board.GameField[firstPlayerTemp, _firstPlayer.XAxis] == _board.GameField[_ball.YAxis, _ball.XAxis] ||
-                        (_board.GameField[secondPlayerTemp, _secondPlayer.XAxis] == _board.GameField[_ball.YAxis, _ball.XAxis]))
-                    {
-                        GetCollidedPaddleEdge(ref collidedWithBall, i);
-                        break;
-                    }
-                    secondPlayerTemp++;
-                }
-                else
-                {
-                    //Checks which part of the paddle collided with the ball - if so, saves that part.
-                    //First player and computer paddles.
-                    if (_board.GameField[firstPlayerTemp, _firstPlayer.XAxis] == _board.GameField[_ball.YAxis, _ball.XAxis] ||
-                        (_board.GameField[autoTemp, _autoPlayer.XAxis] == _board.GameField[_ball.YAxis, _ball.XAxis]))
-                    {
-                        GetCollidedPaddleEdge(ref collidedWithBall, i);
-                        break;
-                    }
-                    autoTemp++;
-                }
-                firstPlayerTemp++;
-            }
-        }
-
-        private void GetCollidedPaddleEdge(ref PaddleEdge collidedWithBall, int i)
-        {
-            if ((i == 0) || (i == 1))
-                collidedWithBall = PaddleEdge.UpperEdge;
-            else if (i == 2)
-                collidedWithBall = PaddleEdge.MiddleEdge;
-            else
-                collidedWithBall = PaddleEdge.BottomEdge;
-        }
-
+        
         //Sets back the last icon that the ball has deleted.
         private void KeepWantedIcon(char temp)
         {
 
             if (temp == CharacterUtilities.PLAYER_ICON)
             {
-                _board.GameField[_ball.YAxis, _ball.XAxis] = temp;
+                _board.GameField[_ball.YPosition, _ball.XPosition] = temp;
                 return;
             }
             else if (temp == CharacterUtilities.TOP_BOTTOM_BORDER_ICON)
             {
-                _board.GameField[_ball.YAxis, _ball.XAxis] = temp;
+                _board.GameField[_ball.YPosition, _ball.XPosition] = temp;
                 return;
             }
             else
-                _board.GameField[_ball.YAxis, _ball.XAxis] = CharacterUtilities.EMPTY_PIXEL;
+                _board.GameField[_ball.YPosition, _ball.XPosition] = CharacterUtilities.EMPTY_PIXEL;
         }
 
         private void PrintScore(int currentScore, int location) => _scoreboard.PrintScore(currentScore, location);
@@ -488,7 +326,7 @@ namespace ConsoleAppPongFinalProject
             do
             {
                 Console.Clear();
-                _userInterface.PrintPongTitle();
+                UIUtilities.PrintPongTitle();
                 Console.SetCursorPosition(28, 7);
                 Console.Write("Will you want to restart the game?");
                 Console.SetCursorPosition(26, 8);
@@ -510,44 +348,6 @@ namespace ConsoleAppPongFinalProject
                 default:
                     SwitchGameStatus(GetUserOption(), ref gameStatus);
                     break;
-            }
-        }
-
-        //A random value for the ball starting position.
-        private int RandomNumer()
-        {
-            Random rnd = new Random();
-            int horizontalOrVertical = rnd.Next(0, 3);
-
-            if (horizontalOrVertical == 0)
-                horizontalOrVertical = -1;
-
-            else if (horizontalOrVertical == 1)
-                horizontalOrVertical = 0;
-
-            else
-                horizontalOrVertical = 1;
-
-            return horizontalOrVertical;
-        }
-
-        private void ResetBallValue()
-        {
-            _board.GameField[_ball.YAxis, _ball.XAxis] = CharacterUtilities.EMPTY_PIXEL;
-            //The next 3 lines resets the ball's coordinates.
-            _ball.YAxis = Board.HalfFieldHight;
-            _ball.XAxis = Board.HalfFieldWidth;
-            _ball.SetBallPosition(_board.GameField);
-        }
-
-        private void EraseAIColumnLeftovers(char[,] gameField)
-        {
-            for (int i = 1; i < 22; i++)
-            {
-                for (int j = 87; j <= 87; j++)
-                {
-                    gameField[i, j] = CharacterUtilities.EMPTY_PIXEL;
-                }
             }
         }
     }

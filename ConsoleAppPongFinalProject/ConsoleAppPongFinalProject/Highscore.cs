@@ -7,23 +7,6 @@ namespace ConsoleAppPongFinalProject
     {
         private readonly string _path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Highscores.txt");
 
-        public void PrintsHighscoreAsTitle()
-        {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.SetCursorPosition(29, 0);
-            Console.Write("  _  _ _      _                       ");
-            Console.SetCursorPosition(29, 1);
-            Console.Write(" | || (_)__ _| |_  ___ __ ___ _ _ ___ ");
-            Console.SetCursorPosition(29, 2);
-            Console.Write(" | __ | / _` | ' \\(_-</ _/ _ \\ '_/ -_)");
-            Console.SetCursorPosition(29, 3);
-            Console.Write(" |_||_|_\\__, |_||_/__/\\__\\___/_| \\___|");
-            Console.SetCursorPosition(29, 4);
-            Console.WriteLine("        |___/                         ");
-            Console.ForegroundColor = ConsoleColor.White;
-        }
-
         //First player aginst the computer writer.
         public void HighscoreWriter(string playerName, int firstPlayerGoalCount, int autoGoalCount)
         {
@@ -62,9 +45,8 @@ namespace ConsoleAppPongFinalProject
                     {
                         string highscoreReader = highscoreFile.ReadLine();
                         if (highscoreReader == null)
-                        {
                             break;
-                        }
+
                         Console.SetCursorPosition(leftForSetCursor, topForSetCursor);
                         Console.WriteLine(highscoreReader);
                         topForSetCursor++;
