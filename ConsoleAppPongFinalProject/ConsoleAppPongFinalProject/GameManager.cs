@@ -5,13 +5,13 @@ namespace ConsoleAppPongFinalProject
 {
     class GameManager
     {
-        public const int GOALS_TO_REACH = 5;
+        public const int GOALS_TO_REACH = 2;
         public static GameMode GameMode = GameMode.None;
         public static bool IsGameOver = false;
 
         private Board _board;
         private Ball _ball;
-        private Scoreboard _scoreBoard;
+        private ScoreDisplayHandler _scoreBoard;
         private Player _firstPlayer;
         private AutoPlayer _autoPlayer;
         private Player _secondPlayer;
@@ -81,7 +81,7 @@ namespace ConsoleAppPongFinalProject
             bool isReachTop = false;
             Console.Clear();
             char pixel = CharacterUtilities.EMPTY_PIXEL;
-            _scoreBoard = new Scoreboard();
+            _scoreBoard = new ScoreDisplayHandler();
 
             do
             {
@@ -103,17 +103,19 @@ namespace ConsoleAppPongFinalProject
         {
             Console.Clear();
             char pixel = CharacterUtilities.EMPTY_PIXEL;
-            _scoreBoard = new Scoreboard();
+            _scoreBoard = new ScoreDisplayHandler();
 
             do
             {
-                _board.PrintGameField();
 
                 if (_isGoal)
                 {
                     UpdateScoreLabel(_isFirstPlayerScored, _secondPlayer);
                     OnGoalScored(ref pixel);
                 }
+                else
+                    _board.PrintGameField();
+
                 UpdateFrame(ref pixel);
                 _ball.IsCollidedWithAnObject(pixel, ref _isFirstPlayerScored, ref _isGoal, _firstPlayer.PointRef.y, _secondPlayer.PointRef.y);
 

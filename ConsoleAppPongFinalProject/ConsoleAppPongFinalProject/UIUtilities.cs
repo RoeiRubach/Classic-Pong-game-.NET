@@ -5,7 +5,7 @@ namespace ConsoleAppPongFinalProject
     static class UIUtilities
     {
         private const int LEFT_SET_CURSOR = 28;
-        
+
         public static void PrintTitles()
         {
             PrintPongTitle();

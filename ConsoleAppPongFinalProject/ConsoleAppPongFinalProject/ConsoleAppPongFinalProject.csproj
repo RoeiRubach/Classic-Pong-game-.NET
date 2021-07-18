@@ -57,7 +57,7 @@
     <Compile Include="Point.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scoreboard.cs" />
+    <Compile Include="ScoreDisplayHandler.cs" />
     <Compile Include="UIUtilities.cs" />
     <Compile Include="MainMenu.cs" />
   </ItemGroup>

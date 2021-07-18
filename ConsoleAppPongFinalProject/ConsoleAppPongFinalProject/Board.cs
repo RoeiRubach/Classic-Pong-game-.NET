@@ -34,7 +34,7 @@ namespace ConsoleAppPongFinalProject
 
         public bool IsPointsAreEqual(int y, int x, Point ballPoint) => GameField[y, x] == GameField[ballPoint.y, ballPoint.x];
 
-        public void SetEmptyPixelAtPoint(Point point) => GameField[point.y , point.x] = CharacterUtilities.EMPTY_PIXEL;
+        public void SetEmptyPixelAtPoint(Point point) => GameField[point.y, point.x] = CharacterUtilities.EMPTY_PIXEL;
 
         public void ClearTopPaddleAfterStep(Point point) => GameField[point.y - 1, point.x] = CharacterUtilities.EMPTY_PIXEL;
 

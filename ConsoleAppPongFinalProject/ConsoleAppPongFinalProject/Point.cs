@@ -48,7 +48,7 @@ namespace ConsoleAppPongFinalProject
             x = Board.FirstPlayerXPosition;
             y = Board.HalfFieldHight - 2;
         }
-        
+
         public void SetSecondPaddlePosition()
         {
             x = Board.SecondPlayerXPosition;

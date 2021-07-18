@@ -23,7 +23,7 @@ namespace ConsoleAppPongFinalProject
             InitializePlayer(board);
         }
 
-        private void InitializePlayer(BoardManager board)
+        private void InitializePlayer(Board board)
         {
             playerData.Score = 0;
             playerData.Name = SetPlayerName();
