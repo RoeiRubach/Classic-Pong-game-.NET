@@ -4,7 +4,7 @@
     {
         public GameBorder(char[,] gameField) => SetBorder(gameField);
 
-        private void SetBorder(char[,] gameField)
+        private void SetBorder(char [,] gameField)
         {
             for (int i = 0; i < gameField.GetLength(0); i++)
             {

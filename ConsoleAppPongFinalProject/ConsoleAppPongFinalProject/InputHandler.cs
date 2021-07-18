@@ -4,9 +4,9 @@ namespace ConsoleAppPongFinalProject
 {
     class InputHandler
     {
-        private BoardManager _board;
+        private Board _board;
 
-        public InputHandler(BoardManager board) => _board = board;
+        public InputHandler(Board board) => _board = board;
 
         public void HandlePlayersInput(Player first, Player second)
         {

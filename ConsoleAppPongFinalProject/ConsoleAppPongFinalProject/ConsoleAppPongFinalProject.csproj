@@ -45,24 +45,21 @@
   <ItemGroup>
     <Compile Include="AutoPlayer.cs" />
     <Compile Include="Ball.cs" />
-    <Compile Include="BoardManager.cs" />
-    <Compile Include="BoardBorder.cs" />
+    <Compile Include="Board.cs" />
     <Compile Include="CharacterUtilities.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="FirstPlayer.cs" />
+    <Compile Include="GameBorder.cs" />
     <Compile Include="GameManager.cs" />
-    <Compile Include="Highscore.cs" />
-    <Compile Include="IMoveable.cs" />
-    <Compile Include="Instructions.cs" />
+    <Compile Include="HighscoreManager.cs" />
+    <Compile Include="InputHandler.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="Coordinate.cs" />
+    <Compile Include="PlayerData.cs" />
+    <Compile Include="Point.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScoreDisplayHandler.cs" />
-    <Compile Include="GameUI.cs" />
-    <Compile Include="SecondPlayer.cs" />
-    <Compile Include="ThreadController.cs" />
-    <Compile Include="UserInterfaceUtilities.cs" />
+    <Compile Include="Scoreboard.cs" />
+    <Compile Include="UIUtilities.cs" />
+    <Compile Include="MainMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -39,20 +39,20 @@ namespace ConsoleAppPongFinalProject
 
         public void SetCenter()
         {
-            x = BoardManager.HalfFieldWidth;
-            y = BoardManager.HalfFieldHight;
+            x = Board.HalfFieldWidth;
+            y = Board.HalfFieldHight;
         }
 
         public void SetFirstPaddlePosition()
         {
-            x = BoardManager.FirstPlayerXPosition;
-            y = BoardManager.HalfFieldHight - 2;
+            x = Board.FirstPlayerXPosition;
+            y = Board.HalfFieldHight - 2;
         }
-
+        
         public void SetSecondPaddlePosition()
         {
-            x = BoardManager.SecondPlayerXPosition;
-            y = BoardManager.HalfFieldHight - 2;
+            x = Board.SecondPlayerXPosition;
+            y = Board.HalfFieldHight - 2;
         }
 
         [MethodImpl(MethodImplOptionsEx.AggressiveInlining)]

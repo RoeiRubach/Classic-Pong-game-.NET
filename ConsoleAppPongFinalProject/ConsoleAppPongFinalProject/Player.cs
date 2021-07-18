@@ -10,11 +10,11 @@ namespace ConsoleAppPongFinalProject
 
         protected PlayerData playerData;
         protected Point point;
-        protected BoardManager board;
+        protected Board board;
         private static int _playersCount;
         private string _computer = "Computer";
 
-        public Player(BoardManager board)
+        public Player(Board board)
         {
             _playersCount++;
             if (_playersCount > 2)

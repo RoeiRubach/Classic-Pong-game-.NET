@@ -23,13 +23,13 @@ namespace ConsoleAppPongFinalProject
             _secondPlayer = secondPlayer;
             SetWinnerByScore();
 
-            if (!_winner.Name.Equals("Computer"))
+            if(!_winner.Name.Equals("Computer"))
                 HighscoreWriter();
         }
 
         private void SetWinnerByScore()
         {
-            if (_firstPlayer.PlayerDataRef.Score > _secondPlayer.PlayerDataRef.Score)
+            if(_firstPlayer.PlayerDataRef.Score > _secondPlayer.PlayerDataRef.Score)
             {
                 _winner.Name = _firstPlayer.PlayerDataRef.Name;
                 _winner.Score = _firstPlayer.PlayerDataRef.Score;
@@ -83,7 +83,7 @@ namespace ConsoleAppPongFinalProject
                 Console.SetCursorPosition(left: 20, top: 7);
                 Console.WriteLine("Sad.. Your highscore is currently empty..");
             }
-            Console.SetCursorPosition(left: 0, top: 28);
+            Console.SetCursorPosition(left: 0, top:28);
             Console.WriteLine("Press any key to get back to the -Main Menu-");
         }
 

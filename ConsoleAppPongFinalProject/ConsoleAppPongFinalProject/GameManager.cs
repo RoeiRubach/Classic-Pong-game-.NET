@@ -9,7 +9,7 @@ namespace ConsoleAppPongFinalProject
         public static GameMode GameMode = GameMode.None;
         public static bool IsGameOver = false;
 
-        private BoardManager _board;
+        private Board _board;
         private Ball _ball;
         private Scoreboard _scoreBoard;
         private Player _firstPlayer;
@@ -21,7 +21,7 @@ namespace ConsoleAppPongFinalProject
 
         public GameManager()
         {
-            _board = new BoardManager();
+            _board = new Board();
             _ball = new Ball(_board);
         }
 

@@ -2,9 +2,9 @@
 
 namespace ConsoleAppPongFinalProject
 {
-    class ScoreDisplayHandler
+    class Scoreboard
     {
-        public ScoreDisplayHandler()
+        public Scoreboard()
         {
             PrintScore(currentScore: 0, location: 0);
             PrintScore(currentScore: 0, location: 83);
