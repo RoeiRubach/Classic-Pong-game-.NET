@@ -2,7 +2,7 @@
 
 namespace ConsoleAppPongFinalProject
 {
-    class Ball
+    class BoardManager
     {
         public Point PointRef => _point;
 
@@ -132,5 +132,17 @@ namespace ConsoleAppPongFinalProject
             else
                 collidedWithBall = PaddleEdge.BottomEdge;
         }
+
+        public bool IsPointsAreEqual(int y, int x, Point ballPoint) => GameField[y, x] == GameField[ballPoint.y, ballPoint.x];
+
+        public void SetEmptyPixelAtPoint(Point point) => GameField[point.y, point.x] = CharacterUtilities.EMPTY_PIXEL;
+
+        public void ClearTopPaddleAfterStep(Point point) => GameField[point.y - 1, point.x] = CharacterUtilities.EMPTY_PIXEL;
+
+        public void ClearBottomPaddleAfterStep(Point point) => GameField[point.y + 5, point.x] = CharacterUtilities.EMPTY_PIXEL;
+
+        public bool IsPaddleReachBottomBorder(Point point) => GameField[point.y + 5, point.x] == CharacterUtilities.TOP_BOTTOM_BORDER_ICON;
+
+        public bool IsPaddleReachTopBorder(Point point) => GameField[point.y - 1, point.x] == CharacterUtilities.TOP_BOTTOM_BORDER_ICON;
     }
 }
