@@ -2,38 +2,97 @@
 
 namespace ConsoleAppPongFinalProject
 {
-    public class Player
+    class Player
     {
-        protected static event Action GoalScored;
+        public static event Action GameOver;
+        public PlayerData PlayerDataRef => playerData;
+        public Point PointRef => point;
 
-        public int GoalCount { get; private set; }
-        public Coordinate Point;
+        protected PlayerData playerData;
+        protected Point point;
+        protected BoardManager board;
+        private static int _playersCount;
+        private string _computer = "Computer";
 
-        public Player()
+        public Player(BoardManager board)
         {
-            GoalCount = 0;
-            Point = new Coordinate();
+            _playersCount++;
+            if (_playersCount > 2)
+                _playersCount = 1;
+            HandlePlayerSetPosition();
+            InitializePlayer(board);
+        }
+
+        private void InitializePlayer(BoardManager board)
+        {
+            playerData.Score = 0;
+            playerData.Name = SetPlayerName();
+            this.board = board;
             SetPosition();
+        }
+
+        public void MoveUp()
+        {
+            point.y--;
+            board.ClearBottomPaddleAfterStep(point);
+            SetPosition();
+        }
+
+        public void MoveDown()
+        {
+            point.y++;
+            board.ClearTopPaddleAfterStep(point);
+            SetPosition();
+        }
+
+        public void IncreaseScoreByOne()
+        {
+            playerData.Score++;
+            CheckForGameOver();
+        }
+
+        private void CheckForGameOver()
+        {
+            if (playerData.Score == GameManager.GOALS_TO_REACH)
+            {
+                UIUtilities.PrintWinner(playerData.Name);
+                if (playerData.Name.Equals(_computer))
+                {
+                    Console.SetCursorPosition(30, 16);
+                    Console.WriteLine("Good luck next time...");
+                }
+                GameOver?.Invoke();
+            }
         }
 
         protected void SetPosition()
         {
-            int playerLength = Point.Y + 5;
-
-            for (int y = Point.Y; y < playerLength; y++)
-                BoardManager.GameField[y, Point.X] = CharacterUtilities.PLAYER_ICON;
+            for (int i = point.y; i < point.y + 5; i++)
+                board.GameField[i, point.x] = CharacterUtilities.PLAYER_ICON;
         }
 
-        protected void MoveUp()
+        private void HandlePlayerSetPosition()
         {
-            Point.Y--;
-            BoardManager.GameField[Point.Y + 5, Point.X] = CharacterUtilities.EMPTY_PIXEL;
+            point = new Point();
+            point.SetSecondPaddlePosition();
+            if (_playersCount == 1)
+                point.SetFirstPaddlePosition();
         }
 
-        protected void MoveDown()
+        private string SetPlayerName()
         {
-            Point.Y++;
-            BoardManager.GameField[Point.Y - 1, Point.X] = CharacterUtilities.EMPTY_PIXEL;
+            if (IsSecondUserAndPlaySingle()) return _computer;
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.SetCursorPosition(3, 7);
+            Console.Write($"Enter -player{_playersCount}'s- name: ");
+
+            string playerName = Console.ReadLine();
+            UIUtilities.ClearTitles();
+            Console.ForegroundColor = ConsoleColor.White;
+            return playerName;
         }
+
+        private bool IsSecondUserAndPlaySingle() => _playersCount == 2 && GameManager.GameMode == GameMode.SinglePlayer;
     }
 }

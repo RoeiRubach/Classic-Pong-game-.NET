@@ -27,7 +27,7 @@ namespace ConsoleAppPongFinalProject
 
         public void PrintGameField()
         {
-            UserInterfaceUtilities.PrintColoredPongTitle();
+            UIUtilities.PrintColoredPongTitle();
             for (int i = 0; i < GameField.GetLength(0); i++)
             {
                 for (int j = 0; j < GameField.GetLength(1); j++)

@@ -1,13 +1,21 @@
 ﻿namespace ConsoleAppPongFinalProject
 {
-    public enum UserChoice
+    enum MainMenuOptions
+    {
+        None,
+        SinglePlayer = 9,
+        PVP = 15,
+        Highscore = 21
+    }
+
+    enum GameMode
     {
         None,
         SinglePlayer,
-        PlayerVSPlayer
+        PVP
     }
 
-    public enum CollidedWithBall
+    enum PaddleEdge
     {
         None,
         UpperEdge,
@@ -15,17 +23,10 @@
         BottomEdge
     }
 
-    public enum GameStatus
+    enum GameStatus
     {
         None,
         Restart,
         End
-    }
-
-    public enum UserOptions
-    {
-        SoloPlayer = 9,
-        PvP = 15,
-        Highscore = 21
     }
 }

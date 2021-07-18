@@ -1,61 +1,47 @@
-﻿namespace ConsoleAppPongFinalProject
+﻿using System;
+
+namespace ConsoleAppPongFinalProject
 {
-    public class Ball
+    class BoardManager
     {
-        public Coordinate Point { get; private set; }
+        public const int FIELD_HIGHT = 24;
+        public const int FIELD_WIDTH = 90;
+        public const int HalfFieldHight = FIELD_HIGHT / 2;
+        public const int HalfFieldWidth = FIELD_WIDTH / 2;
+        public const int FirstPlayerXPosition = 2;
+        public const int SecondPlayerXPosition = FIELD_WIDTH - 3;
 
-        public Ball()
+        public char[,] GameField;
+
+        public BoardManager()
         {
-            Point = new Coordinate();
-            Point.SetCenterBoardPosition();
-            SetBallPosition();
+            GameField = new char[FIELD_HIGHT, FIELD_WIDTH];
+            GameBorder gameBorder = new GameBorder(GameField);
         }
 
-        private void SetBallPosition()
+        public void PrintGameField()
         {
-            BoardManager.GameField[Point.Y, Point.X] = CharacterUtilities.BALL_ICON;
+            UIUtilities.PrintPongTitle();
+            for (int i = 0; i < GameField.GetLength(0); i++)
+            {
+                for (int j = 0; j < GameField.GetLength(1); j++)
+                {
+                    Console.Write(GameField[i, j]);
+                }
+                Console.WriteLine();
+            }
         }
 
-        public void BallMovementLogic(ref char temp, GameManager gameManager, int xDirection, int yDirection)
-        {
-            //Saves the last icon (so it won't be deleted).
-            gameManager.SaveLastIcon(temp);
+        public bool IsPointsAreEqual(int y, int x, Point ballPoint) => GameField[y, x] == GameField[ballPoint.y, ballPoint.x];
 
-            //Changes the ball -X- and -Y- as needed.
-            Coordinate point = new Coordinate();
-            point.X = xDirection + Point.X;
-            point.Y = yDirection + Point.Y;
-            Point = point;
+        public void SetEmptyPixelAtPoint(Point point) => GameField[point.y, point.x] = CharacterUtilities.EMPTY_PIXEL;
 
-            //Sets the last icon the his previous location.
-            temp = BoardManager.GameField[Point.Y, Point.X];
+        public void ClearTopPaddleAfterStep(Point point) => GameField[point.y - 1, point.x] = CharacterUtilities.EMPTY_PIXEL;
 
-            //Sets the ball to his new location.
-            SetBallPosition();
-        }
+        public void ClearBottomPaddleAfterStep(Point point) => GameField[point.y + 5, point.x] = CharacterUtilities.EMPTY_PIXEL;
 
-        public void SetBackToOrigin()
-        {
-            BoardManager.GameField[Point.Y, Point.X] = CharacterUtilities.EMPTY_PIXEL;
-            Point.SetCenterBoardPosition();
-            SetBallPosition();
-        }
+        public bool IsPaddleReachBottomBorder(Point point) => GameField[point.y + 5, point.x] == CharacterUtilities.TOP_BOTTOM_BORDER_ICON;
 
-        public void CreateBallInconsistently(ref int ballYDiraction, ref int ballXDiraction, bool isTwoPlayers)
-        {
-            //Spawns the ball at Inconsistently coordinates.
-            Coordinate point = new Coordinate();
-            point.Y = (GameManager.RandomNumer() + GameManager.RandomNumer() + GameManager.RandomNumer() + GameManager.RandomNumer() + BoardManager.GetHalfFieldHight());
-            point.X = 2 + GameManager.RandomNumer() + BoardManager.GetHalfFieldWidth();
-            Point = point;
-            ballYDiraction = GameManager.RandomNumer();
-
-            if (isTwoPlayers)
-                ballXDiraction *= (-1);
-            else
-                ballXDiraction = -1;
-
-            SetBallPosition();
-        }
+        public bool IsPaddleReachTopBorder(Point point) => GameField[point.y - 1, point.x] == CharacterUtilities.TOP_BOTTOM_BORDER_ICON;
     }
 }

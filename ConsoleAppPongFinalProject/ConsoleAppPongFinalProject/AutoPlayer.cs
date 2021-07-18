@@ -1,26 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ConsoleAppPongFinalProject
+﻿namespace ConsoleAppPongFinalProject
 {
-    public class AutoPlayer : Player, IMoveable
+    class AutoPlayer : Player
     {
-        bool isReachTop = false;
-
-        public AutoPlayer() : base()
+        public AutoPlayer(Board board) : base(board)
         {
-            Point.SetSecondPuddlePosition();
         }
 
-        public void HandleMovement()
+        public void HandleAIMovement(ref bool isReachTop)
         {
-            if (BoardManager.CheckPlayerOutFieldAbove(Point) && (!isReachTop))
+            if (!board.IsPaddleReachTopBorder(point) && (!isReachTop))
                 MoveUp();
 
-            else if (BoardManager.CheckPlayerOutFieldAbove(Point))
+            else if (!board.IsPaddleReachBottomBorder(point))
             {
                 isReachTop = true;
                 MoveDown();
@@ -31,11 +22,13 @@ namespace ConsoleAppPongFinalProject
             SetPosition();
         }
 
-        public void SetsAIAtMiddle()
+        private void EraseAILeftovers(char[,] gameField)
         {
-            //Sets the auto-player's coordinates at the middle field.
-            Point.Y = BoardManager.GetHalfFieldHight() - 2;
-            Point.X = BoardManager.GetHalfFieldWidth() - 3;
+            for (int i = 1; i < 22; i++)
+            {
+                for (int j = 87; j <= 87; j++)
+                    gameField[i, j] = CharacterUtilities.EMPTY_PIXEL;
+            }
         }
     }
 }
