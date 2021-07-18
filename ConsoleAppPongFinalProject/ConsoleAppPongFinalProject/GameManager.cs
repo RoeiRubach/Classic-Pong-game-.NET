@@ -6,19 +6,18 @@ namespace ConsoleAppPongFinalProject
     class GameManager
     {
         public const int GOALS_TO_REACH = 5;
-
-        public static UserChoice UserChoice = UserChoice.None;
-
-        private bool _isGoal = false;
-        private bool _isGameOver = false;
-        private bool _isFirstPlayerScored = false;
+        public static GameMode GameMode = GameMode.None;
+        public static bool IsGameOver = false;
 
         private Board _board;
         private Ball _ball;
-        private Scoreboard _scoreboard;
+        private Scoreboard _scoreBoard;
         private Player _firstPlayer;
         private AutoPlayer _autoPlayer;
         private Player _secondPlayer;
+
+        private bool _isGoal = false;
+        private bool _isFirstPlayerScored = false;
 
         public GameManager()
         {
@@ -28,6 +27,7 @@ namespace ConsoleAppPongFinalProject
 
         public void Start()
         {
+            Player.GameOver += OnGameOver;
             Console.CursorVisible = false;
             Console.ForegroundColor = ConsoleColor.White;
 
@@ -41,172 +41,92 @@ namespace ConsoleAppPongFinalProject
 
             _firstPlayer = new Player(_board);
             Thread mySingleWorker;
+            InputHandler inputHandler;
 
-            switch (UserChoice)
+            switch (GameMode)
             {
-                case UserChoice.SinglePlayer:
+                case GameMode.SinglePlayer:
                     _autoPlayer = new AutoPlayer(_board);
-                    UIUtilities.PrintPlayerInstructions(_firstPlayer.Name);
-                    mySingleWorker = new Thread(ThreadFunctionForTheBall_AutoPlayer);
+                    UIUtilities.PrintPlayerInstructions(_firstPlayer.PlayerDataRef.Name);
+                    mySingleWorker = new Thread(ThreadFunctionBall_AutoPlayer);
                     mySingleWorker.Start();
-                    HandlePlayerInput();
+                    inputHandler = new InputHandler(_board);
+                    inputHandler.HandlePlayersInput(_firstPlayer, null);
                     break;
-                case UserChoice.PVP:
+                case GameMode.PVP:
                     _secondPlayer = new Player(_board);
-                    UIUtilities.PrintPlayersInsructions(_firstPlayer.Name, _secondPlayer.Name);
-                    mySingleWorker = new Thread(ThreadFunctionForTheBall_PVP);
+                    UIUtilities.PrintPlayersInsructions(_firstPlayer.PlayerDataRef.Name, _secondPlayer.PlayerDataRef.Name);
+                    mySingleWorker = new Thread(ThreadFunctionBall_PVP);
                     mySingleWorker.Start();
-                    HandlePlayersInput();
+                    inputHandler = new InputHandler(_board);
+                    inputHandler.HandlePlayersInput(_firstPlayer, _secondPlayer);
                     break;
             }
         }
 
-        private void HandlePlayerInput()
+        private void OnGameOver()
         {
-            do
-            {
-                ConsoleKeyInfo key = Console.ReadKey(true);
-                switch (key.Key)
-                {
-                    case ConsoleKey.UpArrow:
-                        if (!_board.IsPaddleReachTopBorder(_firstPlayer.PointRef))
-                            _firstPlayer.MoveUp();
-                        break;
+            Player.GameOver -= OnGameOver;
+            IsGameOver = true;
+            HighscoreManager highscore;
 
-                    case ConsoleKey.DownArrow:
-                        if (!_board.IsPaddleReachBottomBorder(_firstPlayer.PointRef))
-                            _firstPlayer.MoveDown();
-                        break;
-                }
-                _firstPlayer.SetPlayerPosition();
-            } while (!_isGameOver);
+            if (GameMode == GameMode.PVP)
+                highscore = new HighscoreManager(_firstPlayer, _secondPlayer);
+            else
+                highscore = new HighscoreManager(_firstPlayer, _autoPlayer);
         }
 
-        private void HandlePlayersInput()
-        {
-            do
-            {
-                ConsoleKeyInfo key = Console.ReadKey(true);
-                switch (key.Key)
-                {
-                    case ConsoleKey.UpArrow:
-                        if (!_board.IsPaddleReachTopBorder(_firstPlayer.PointRef))
-                            _firstPlayer.MoveUp();
-                        break;
-
-                    case ConsoleKey.DownArrow:
-                        if (!_board.IsPaddleReachBottomBorder(_firstPlayer.PointRef))
-                            _firstPlayer.MoveDown();
-                        break;
-
-                    case ConsoleKey.W:
-                        if (!_board.IsPaddleReachTopBorder(_secondPlayer.PointRef))
-                            _secondPlayer.MoveUp();
-
-                        break;
-                    case ConsoleKey.S:
-                        if (!_board.IsPaddleReachBottomBorder(_secondPlayer.PointRef))
-                            _secondPlayer.MoveDown();
-                        break;
-                }
-                _firstPlayer.SetPlayerPosition();
-                _secondPlayer.SetPlayerPosition();
-
-            } while (!_isGameOver);
-        }
-
-        private void ThreadFunctionForTheBall_AutoPlayer()
+        private void ThreadFunctionBall_AutoPlayer()
         {
             bool isReachTop = false;
             Console.Clear();
             char pixel = CharacterUtilities.EMPTY_PIXEL;
-            _scoreboard = new Scoreboard();
+            _scoreBoard = new Scoreboard();
 
             do
             {
                 _autoPlayer.HandleAIMovement(ref isReachTop);
                 _board.PrintGameField();
-                _ball.IsCollidedWithAnObject(pixel, ref _isFirstPlayerScored, ref _isGoal, _firstPlayer.PointRef.y, _autoPlayer.PointRef.y);
 
                 if (_isGoal)
                 {
-                    UpdateScoreLabel(_isFirstPlayerScored);
+                    UpdateScoreLabel(_isFirstPlayerScored, _autoPlayer);
                     OnGoalScored(ref pixel);
-
-                    if (IsReachMaxGoals(_firstPlayer.Score))
-                    {
-                        _isGameOver = true;
-                        UIUtilities.PrintWinner(_firstPlayer.Name);
-                        Highscore highscore = new Highscore();
-                        highscore.HighscoreWriter(_firstPlayer.Name, _firstPlayer.Score, _autoPlayer.Score);
-                        break;
-                    }
-                    else if (IsReachMaxGoals(_autoPlayer.Score))
-                    {
-                        _isGameOver = true;
-                        UIUtilities.PrintWinner("Computer");
-                        Console.SetCursorPosition(30, 16);
-                        Console.WriteLine(_firstPlayer.Name + ", good luck next time.");
-                        break;
-                    }
                 }
+                UpdateFrame(ref pixel);
+                _ball.IsCollidedWithAnObject(pixel, ref _isFirstPlayerScored, ref _isGoal, _firstPlayer.PointRef.y, _autoPlayer.PointRef.y);
 
-                SetIconBackOnBoard(pixel);
-                _board.SetEmptyPixelAtPoint(_ball.PointRef);
-                _ball.IncrementBallMovement();
-                pixel = _board.GameField[_ball.PointRef.y, _ball.PointRef.x];
-                _ball.SetBallPosition();
-
-            } while (!_isGameOver);
-
-            _board.SetEmptyPixelAtPoint(_ball.PointRef);
-            _ball.ResetBallValue();
-            isReachTop = false;
+            } while (!IsGameOver);
         }
 
-        private void ThreadFunctionForTheBall_PVP()
+        private void ThreadFunctionBall_PVP()
         {
             Console.Clear();
             char pixel = CharacterUtilities.EMPTY_PIXEL;
-            _scoreboard = new Scoreboard();
+            _scoreBoard = new Scoreboard();
 
             do
             {
                 _board.PrintGameField();
-                _ball.IsCollidedWithAnObject(pixel, ref _isFirstPlayerScored, ref _isGoal, _firstPlayer.PointRef.y, _secondPlayer.PointRef.y);
 
                 if (_isGoal)
                 {
-                    UpdateScoreLabel(_isFirstPlayerScored);
+                    UpdateScoreLabel(_isFirstPlayerScored, _secondPlayer);
                     OnGoalScored(ref pixel);
-
-                    if (IsReachMaxGoals(_firstPlayer.Score))
-                    {
-                        _isGameOver = true;
-                        UIUtilities.PrintWinner(_firstPlayer.Name);
-                        Highscore highscore = new Highscore();
-                        highscore.HighscoreWriter(_firstPlayer.Name, _secondPlayer.Name, _firstPlayer.Score, _secondPlayer.Score);
-                        break;
-                    }
-                    else if (IsReachMaxGoals(_secondPlayer.Score))
-                    {
-                        _isGameOver = true;
-                        UIUtilities.PrintWinner(_secondPlayer.Name);
-                        Highscore highscore = new Highscore();
-                        highscore.HighscoreWriter(_firstPlayer.Name, _secondPlayer.Name, _firstPlayer.Score, _secondPlayer.Score);
-                        break;
-                    }
                 }
+                UpdateFrame(ref pixel);
+                _ball.IsCollidedWithAnObject(pixel, ref _isFirstPlayerScored, ref _isGoal, _firstPlayer.PointRef.y, _secondPlayer.PointRef.y);
 
-                _board.SetEmptyPixelAtPoint(_ball.PointRef);
-                SetIconBackOnBoard(pixel);
-                _ball.IncrementBallMovement();
-                pixel = _board.GameField[_ball.PointRef.y, _ball.PointRef.x];
-                _ball.SetBallPosition();
+            } while (!IsGameOver);
+        }
 
-            } while (!_isGameOver);
-
-            _ball.ResetBallValue();
+        private void UpdateFrame(ref char pixel)
+        {
+            _board.SetEmptyPixelAtPoint(_ball.PointRef);
+            SetIconBackOnBoard(pixel);
+            _ball.IncrementBallMovement();
+            pixel = _board.GameField[_ball.PointRef.y, _ball.PointRef.x];
+            _ball.SetBallPosition();
         }
 
         private void OnGoalScored(ref char pixel)
@@ -218,24 +138,17 @@ namespace ConsoleAppPongFinalProject
             Thread.Sleep(1300);
         }
 
-        private bool IsReachMaxGoals(int currentGoals) => currentGoals == GOALS_TO_REACH;
-
-        private void UpdateScoreLabel(bool isFirstPlayerScored)
+        private void UpdateScoreLabel(bool isFirstPlayerScored, Player player)
         {
             if (isFirstPlayerScored)
             {
                 _firstPlayer.IncreaseScoreByOne();
-                PrintScore(_firstPlayer.Score, location: 0);
-            }
-            else if (UserChoice == UserChoice.PVP)
-            {
-                _secondPlayer.IncreaseScoreByOne();
-                PrintScore(_secondPlayer.Score, location: 83);
+                PrintScore(_firstPlayer.PlayerDataRef.Score, location: 0);
             }
             else
             {
-                _autoPlayer.IncreaseScoreByOne();
-                PrintScore(_autoPlayer.Score, location: 83);
+                player.IncreaseScoreByOne();
+                PrintScore(player.PlayerDataRef.Score, location: 83);
             }
         }
 
@@ -248,9 +161,8 @@ namespace ConsoleAppPongFinalProject
                 _board.GameField[_ball.PointRef.y, _ball.PointRef.x] = temp;
         }
 
-        private void PrintScore(int currentScore, int location) => _scoreboard.PrintScore(currentScore, location);
+        private void PrintScore(int currentScore, int location) => _scoreBoard.PrintScore(currentScore, location);
 
-        //Creates a switch statement in a Do-While loop to set the isRestarting boolean.
         public bool IsGameRestart()
         {
             GameStatus gameStatus = GameStatus.None;
@@ -261,31 +173,16 @@ namespace ConsoleAppPongFinalProject
             switch (gameStatus)
             {
                 case GameStatus.Restart:
-                    _isGameOver = false;
+                    IsGameOver = false;
                     break;
                 case GameStatus.End:
                     Console.SetCursorPosition(28, 10);
                     Console.WriteLine("Thank you for playing. Goodbye.");
-                    _isGameOver = true;
+                    IsGameOver = true;
                     Console.ReadKey();
                     break;
             }
-            return _isGameOver;
-        }
-
-        private int GetUserOption()
-        {
-            int oneOrTwo;
-            do
-            {
-                Console.Clear();
-                UIUtilities.PrintPongTitle();
-                Console.SetCursorPosition(28, 7);
-                Console.Write("Will you want to restart the game?");
-                Console.SetCursorPosition(26, 8);
-                Console.Write("Enter -1- to restart or -2- to exit: ");
-            } while (!int.TryParse(Console.ReadLine(), out oneOrTwo));
-            return oneOrTwo;
+            return IsGameOver;
         }
 
         private void SwitchGameStatus(int oneOrTwo, ref GameStatus gameStatus)
@@ -302,6 +199,21 @@ namespace ConsoleAppPongFinalProject
                     SwitchGameStatus(GetUserOption(), ref gameStatus);
                     break;
             }
+        }
+
+        private int GetUserOption()
+        {
+            int result;
+            do
+            {
+                Console.Clear();
+                UIUtilities.PrintPongTitle();
+                Console.SetCursorPosition(28, 7);
+                Console.Write("Will you want to restart the game?");
+                Console.SetCursorPosition(26, 8);
+                Console.Write("Enter -1- to restart or -2- to exit: ");
+            } while (!int.TryParse(Console.ReadLine(), out result));
+            return result;
         }
     }
 }

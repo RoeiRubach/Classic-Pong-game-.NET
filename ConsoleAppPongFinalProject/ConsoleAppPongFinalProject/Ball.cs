@@ -32,7 +32,7 @@ namespace ConsoleAppPongFinalProject
             _point.x = 2 + RandomNumer() + Board.HalfFieldWidth;
             _velocity.y = RandomNumer();
 
-            if (GameManager.UserChoice == UserChoice.PVP)
+            if (GameManager.GameMode == GameMode.PVP)
                 _velocity.x *= -1;
             else
                 _velocity.x = -1;
@@ -42,7 +42,6 @@ namespace ConsoleAppPongFinalProject
 
         public void ResetBallValue()
         {
-            //The next 3 lines resets the ball's coordinates.
             _point.SetCenter();
             SetBallPosition();
         }
@@ -65,12 +64,12 @@ namespace ConsoleAppPongFinalProject
             return horizontalOrVertical;
         }
 
-        public void IsCollidedWithAnObject(char currentPixel, ref bool isFirstPlayerScored, ref bool isGoal, int firstPlayerY, int secondPlayerY)
+        public void IsCollidedWithAnObject(char currentPixel, ref bool isFirstPlayerScored, ref bool isGoal, int firstPaddleY, int secondPaddleY)
         {
             if (currentPixel == CharacterUtilities.PLAYER_ICON)
             {
                 PaddleEdge collidedWithBall = PaddleEdge.None;
-                WhichPaddleEdgeCollidedWithBall(ref collidedWithBall, firstPlayerY, secondPlayerY);
+                WhichPaddleEdgeCollidedWithBall(ref collidedWithBall, firstPaddleY, secondPaddleY);
 
                 switch (collidedWithBall)
                 {

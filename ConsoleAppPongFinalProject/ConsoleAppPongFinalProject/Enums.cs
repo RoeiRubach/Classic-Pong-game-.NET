@@ -8,7 +8,7 @@
         Highscore = 21
     }
 
-    enum UserChoice
+    enum GameMode
     {
         None,
         SinglePlayer,

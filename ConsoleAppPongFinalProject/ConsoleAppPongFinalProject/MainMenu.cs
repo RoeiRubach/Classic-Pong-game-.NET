@@ -41,15 +41,15 @@ namespace ConsoleAppPongFinalProject
                         switch (mainMenuOptions)
                         {
                             case MainMenuOptions.SinglePlayer:
-                                GameManager.UserChoice = UserChoice.SinglePlayer;
+                                GameManager.GameMode = GameMode.SinglePlayer;
                                 isPressed = true;
                                 break;
                             case MainMenuOptions.PVP:
-                                GameManager.UserChoice = UserChoice.PVP;
+                                GameManager.GameMode = GameMode.PVP;
                                 isPressed = true;
                                 break;
                             case MainMenuOptions.Highscore:
-                                Highscore _highscore = new Highscore();
+                                HighscoreManager _highscore = new HighscoreManager();
                                 UIUtilities.PrintHighscoreTitle();
                                 _highscore.HighscoreReader();
                                 Console.ReadKey(true);
@@ -68,7 +68,6 @@ namespace ConsoleAppPongFinalProject
 
         private void SetMainMenuCursor(int leftForCursor, int topForCursor)
         {
-            //9 = Next to 1Player. 15 = Next to 2Players. 21 = Next to Highscore.
             ClearOldCursorCopies();
             Console.SetCursorPosition(leftForCursor, topForCursor);
             Console.ForegroundColor = ConsoleColor.Blue;

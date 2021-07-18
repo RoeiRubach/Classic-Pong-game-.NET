@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ConsoleAppPongFinalProject
+﻿namespace ConsoleAppPongFinalProject
 {
     class AutoPlayer : Player
     {
@@ -14,10 +8,10 @@ namespace ConsoleAppPongFinalProject
 
         public void HandleAIMovement(ref bool isReachTop)
         {
-            if (!_board.IsPaddleReachTopBorder(point) && (!isReachTop))
+            if (!board.IsPaddleReachTopBorder(point) && (!isReachTop))
                 MoveUp();
 
-            else if (!_board.IsPaddleReachBottomBorder(point))
+            else if (!board.IsPaddleReachBottomBorder(point))
             {
                 isReachTop = true;
                 MoveDown();
@@ -25,17 +19,8 @@ namespace ConsoleAppPongFinalProject
             else
                 isReachTop = false;
 
-            SetPlayerPosition();
+            SetPosition();
         }
-
-        //private void SetAIAtMid()
-        //{
-        //    //Sets the auto-player's coordinates at the middle field.
-        //    EraseAILeftovers(_board.GameField);
-        //    YAxis = Board.HalfFieldHight - 2;
-        //    XAxis = Board.FIELD_WIDTH - 3;
-        //    SetPlayerPosition();
-        //}
 
         private void EraseAILeftovers(char[,] gameField)
         {
