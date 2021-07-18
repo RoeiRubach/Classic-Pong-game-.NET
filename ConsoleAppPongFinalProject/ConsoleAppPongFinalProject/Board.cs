@@ -8,6 +8,8 @@ namespace ConsoleAppPongFinalProject
         public const int FIELD_WIDTH = 90;
         public const int HalfFieldHight = FIELD_HIGHT / 2;
         public const int HalfFieldWidth = FIELD_WIDTH / 2;
+        public const int FirstPlayerXPosition = 2;
+        public const int SecondPlayerXPosition = FIELD_WIDTH - 3;
 
         public char[,] GameField;
 
@@ -30,12 +32,16 @@ namespace ConsoleAppPongFinalProject
             }
         }
 
-        public void ClearTopPaddleEdge(int y, int x) => GameField[y - 1, x] = CharacterUtilities.EMPTY_PIXEL;
+        public bool IsPointsAreEqual(int y, int x, Point ballPoint) => GameField[y, x] == GameField[ballPoint.y, ballPoint.x];
 
-        public void ClearBottomPaddleEdge(int y, int x) => GameField[y + 5, x] = CharacterUtilities.EMPTY_PIXEL;
+        public void SetEmptyPixelAtPoint(Point point) => GameField[point.y , point.x] = CharacterUtilities.EMPTY_PIXEL;
 
-        public bool IsPaddleReachBottomBorder(int y, int x) => GameField[y + 5, x] == CharacterUtilities.TOP_BOTTOM_BORDER_ICON;
+        public void ClearTopPaddleAfterStep(Point point) => GameField[point.y - 1, point.x] = CharacterUtilities.EMPTY_PIXEL;
 
-        public bool IsPaddleReachTopBorder(int y, int x) => GameField[y - 1, x] == CharacterUtilities.TOP_BOTTOM_BORDER_ICON;
+        public void ClearBottomPaddleAfterStep(Point point) => GameField[point.y + 5, point.x] = CharacterUtilities.EMPTY_PIXEL;
+
+        public bool IsPaddleReachBottomBorder(Point point) => GameField[point.y + 5, point.x] == CharacterUtilities.TOP_BOTTOM_BORDER_ICON;
+
+        public bool IsPaddleReachTopBorder(Point point) => GameField[point.y - 1, point.x] == CharacterUtilities.TOP_BOTTOM_BORDER_ICON;
     }
 }

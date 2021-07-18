@@ -2,10 +2,7 @@
 {
     class GameBorder
     {
-        public GameBorder(char[,] gameField)
-        {
-            SetBorder(gameField);
-        }
+        public GameBorder(char[,] gameField) => SetBorder(gameField);
 
         private void SetBorder(char [,] gameField)
         {

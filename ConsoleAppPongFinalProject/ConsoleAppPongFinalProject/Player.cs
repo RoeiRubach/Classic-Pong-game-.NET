@@ -6,24 +6,35 @@ namespace ConsoleAppPongFinalProject
     {
         public string Name { get; private set; }
         public int Score { get; private set; }
-        public int XAxis { get; set; }
-        public int YAxis { get; set; }
+        public Point PointRef => point;
 
+        protected Point point;
         protected Board _board;
         private static int _playersCount;
 
-        public Player(int x, int y, Board board)
+        public Player(Board board)
         {
             _playersCount++;
             if (_playersCount > 2)
                 _playersCount = 1;
+            HandlePlayerSetPosition();
 
             Score = 0;
-            XAxis = x;
-            YAxis = y;
             Name = SetPlayerName();
             _board = board;
             SetPlayerPosition();
+        }
+
+        public void MoveUp()
+        {
+            point.y--;
+            _board.ClearBottomPaddleAfterStep(point);
+        }
+
+        public void MoveDown()
+        {
+            point.y++;
+            _board.ClearTopPaddleAfterStep(point);
         }
 
         public void IncreaseScoreByOne()
@@ -36,10 +47,18 @@ namespace ConsoleAppPongFinalProject
             }
         }
 
+        private void HandlePlayerSetPosition()
+        {
+            point = new Point();
+            point.SetSecondPlayerPosition();
+            if (_playersCount == 1)
+                point.SetFirstPlayerPosition();
+        }
+
         public void SetPlayerPosition()
         {
-            for (int i = YAxis; i < YAxis + 5; i++)
-                _board.GameField[i, XAxis] = CharacterUtilities.PLAYER_ICON;
+            for (int i = point.y; i < point.y + 5; i++)
+                _board.GameField[i, point.x] = CharacterUtilities.PLAYER_ICON;
         }
 
         private string SetPlayerName()

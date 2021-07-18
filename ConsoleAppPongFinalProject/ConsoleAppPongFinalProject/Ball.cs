@@ -4,46 +4,38 @@ namespace ConsoleAppPongFinalProject
 {
     class Ball
     {
-        public int XPosition { get; set; }
-        public int YPosition { get; set; }
+        public Point PointRef => _point;
 
-        public int XDirection { get; set; }
-        public int YDirection { get; set; }
-
+        private Point _point;
+        private Point _velocity;
         private Board _board;
 
-        public Ball(int x, int y, Board board)
+        public Ball(Board board)
         {
+            _point = new Point(Board.HalfFieldWidth, Board.HalfFieldHight);
+            _velocity = new Point(-1, 0);
             _board = board;
-            XPosition = x;
-            YPosition = y;
-            XDirection = -1;
-            YDirection = 0;
             SetBallPosition();
         }
 
         public void SetBallPosition()
         {
-            _board.GameField[YPosition, XPosition] = CharacterUtilities.BALL_ICON;
+            _board.GameField[_point.y, _point.x] = CharacterUtilities.BALL_ICON;
         }
 
-        public void IncrementBallMovement()
-        {
-            XPosition += XDirection;
-            YPosition += YDirection;
-        }
+        public void IncrementBallMovement() => _point += _velocity;
 
         public void SetBallInconsistently()
         {
             //Spawns the ball at Inconsistently coordinates.
-            YPosition = RandomNumer() + RandomNumer() + RandomNumer() + RandomNumer() + Board.HalfFieldHight;
-            XPosition = 2 + RandomNumer() + Board.HalfFieldWidth;
-            YDirection = RandomNumer();
+            _point.y = RandomNumer() + RandomNumer() + RandomNumer() + RandomNumer() + Board.HalfFieldHight;
+            _point.x = 2 + RandomNumer() + Board.HalfFieldWidth;
+            _velocity.y = RandomNumer();
 
             if (GameManager.UserChoice == UserChoice.PVP)
-                XDirection *= (-1);
+                _velocity.x *= -1;
             else
-                XDirection = -1;
+                _velocity.x = -1;
 
             SetBallPosition();
         }
@@ -51,8 +43,7 @@ namespace ConsoleAppPongFinalProject
         public void ResetBallValue()
         {
             //The next 3 lines resets the ball's coordinates.
-            YPosition = Board.HalfFieldHight;
-            XPosition = Board.HalfFieldWidth;
+            _point.SetCenter();
             SetBallPosition();
         }
 
@@ -74,34 +65,34 @@ namespace ConsoleAppPongFinalProject
             return horizontalOrVertical;
         }
 
-        public void IsCollidedWithAnObject(char currentPixel, ref bool isFirstPlayerScored, ref bool isGoal, int firstPlayerY, int secondPlayerY = 0, int AIY = 0)
+        public void IsCollidedWithAnObject(char currentPixel, ref bool isFirstPlayerScored, ref bool isGoal, int firstPlayerY, int secondPlayerY)
         {
             if (currentPixel == CharacterUtilities.PLAYER_ICON)
             {
                 PaddleEdge collidedWithBall = PaddleEdge.None;
-                WhichPaddleEdgeCollidedWithBall(ref collidedWithBall, firstPlayerY, secondPlayerY, AIY);
+                WhichPaddleEdgeCollidedWithBall(ref collidedWithBall, firstPlayerY, secondPlayerY);
 
                 switch (collidedWithBall)
                 {
                     case PaddleEdge.UpperEdge:
-                        YDirection = -1;
+                        _velocity.y = -1;
                         break;
                     case PaddleEdge.MiddleEdge:
-                        YDirection = 0;
+                        _velocity.y = 0;
                         break;
                     case PaddleEdge.BottomEdge:
-                        YDirection = 1;
+                        _velocity.y = 1;
                         break;
                 }
-                XDirection *= -1;
+                _velocity.x *= -1;
             }
 
             else if (currentPixel == CharacterUtilities.TOP_BOTTOM_BORDER_ICON)
-                YDirection *= (-1);
+                _velocity.y *= (-1);
 
             else if (currentPixel == CharacterUtilities.LEFT_RIGHT_BORDER_ICON)
             {
-                if (XPosition >= 89)
+                if (_point.x >= 89)
                     isFirstPlayerScored = true;
                 else
                     isFirstPlayerScored = false;
@@ -110,39 +101,27 @@ namespace ConsoleAppPongFinalProject
             }
         }
 
-        private void WhichPaddleEdgeCollidedWithBall(ref PaddleEdge collidedWithBall, int firstPlayerY, int secondPlayerY, int AIY)
+        private void WhichPaddleEdgeCollidedWithBall(ref PaddleEdge collidedWithBall, int firstPlayerY, int secondPlayerY)
         {
-            int currentAIYValue = 0, currentFirstPlayerYValue = firstPlayerY, currentSecondPlayerYValue = 0;
-
-            if (GameManager.UserChoice == UserChoice.PVP)
-                currentSecondPlayerYValue = secondPlayerY;
-            else
-                currentAIYValue = AIY;
+            int firstPlayerPaddlePart = firstPlayerY;
+            int secondPlayerPaddlePart = secondPlayerY;
 
             for (int i = 0; i < 5; i++)
             {
-                if (GameManager.UserChoice == UserChoice.PVP)
+                if (FoundHittedPart(firstPlayerPaddlePart, secondPlayerPaddlePart))
                 {
-                    if (_board.GameField[currentFirstPlayerYValue, 2] == _board.GameField[YPosition, XPosition] ||
-                        (_board.GameField[currentSecondPlayerYValue, Board.FIELD_WIDTH - 3] == _board.GameField[YPosition, XPosition]))
-                    {
-                        GetCollidedPaddleEdge(ref collidedWithBall, i);
-                        break;
-                    }
-                    currentSecondPlayerYValue++;
+                    GetCollidedPaddleEdge(ref collidedWithBall, i);
+                    break;
                 }
-                else
-                {
-                    if (_board.GameField[currentFirstPlayerYValue, 2] == _board.GameField[YPosition, XPosition] ||
-                        (_board.GameField[currentAIYValue, Board.FIELD_WIDTH - 3] == _board.GameField[YPosition, XPosition]))
-                    {
-                        GetCollidedPaddleEdge(ref collidedWithBall, i);
-                        break;
-                    }
-                    currentAIYValue++;
-                }
-                currentFirstPlayerYValue++;
+                secondPlayerPaddlePart++;
+                firstPlayerPaddlePart++;
             }
+        }
+
+        private bool FoundHittedPart(int firstPlayerPaddlePart, int secondPlayerPaddlePart)
+        {
+            return _board.IsPointsAreEqual(firstPlayerPaddlePart, Board.FirstPlayerXPosition, _point) ||
+                                _board.IsPointsAreEqual(secondPlayerPaddlePart, Board.SecondPlayerXPosition, _point);
         }
 
         private void GetCollidedPaddleEdge(ref PaddleEdge collidedWithBall, int i)

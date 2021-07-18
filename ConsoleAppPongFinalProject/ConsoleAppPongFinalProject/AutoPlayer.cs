@@ -8,22 +8,19 @@ namespace ConsoleAppPongFinalProject
 {
     class AutoPlayer : Player
     {
-        public AutoPlayer(int x, int y, Board board) : base(x, y, board)
+        public AutoPlayer(Board board) : base(board)
         {
         }
 
         public void HandleAIMovement(ref bool isReachTop)
         {
-            if (!_board.IsPaddleReachTopBorder(YAxis, XAxis) && (!isReachTop))
-            {
-                YAxis--;
-                _board.ClearBottomPaddleEdge(YAxis, XAxis);
-            }
-            else if (!_board.IsPaddleReachBottomBorder(YAxis, XAxis))
+            if (!_board.IsPaddleReachTopBorder(point) && (!isReachTop))
+                MoveUp();
+
+            else if (!_board.IsPaddleReachBottomBorder(point))
             {
                 isReachTop = true;
-                YAxis++;
-                _board.ClearTopPaddleEdge(YAxis, XAxis);
+                MoveDown();
             }
             else
                 isReachTop = false;

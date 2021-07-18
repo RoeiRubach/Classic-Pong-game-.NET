@@ -23,7 +23,7 @@ namespace ConsoleAppPongFinalProject
         public GameManager()
         {
             _board = new Board();
-            _ball = new Ball(Board.HalfFieldWidth, Board.HalfFieldHight, _board);
+            _ball = new Ball(_board);
         }
 
         public void Start()
@@ -39,20 +39,20 @@ namespace ConsoleAppPongFinalProject
             MainMenu mainMenu = new MainMenu();
             UIUtilities.ClearTitles();
 
-            _firstPlayer = new Player(2, Board.HalfFieldHight - 2, _board);
+            _firstPlayer = new Player(_board);
             Thread mySingleWorker;
 
             switch (UserChoice)
             {
                 case UserChoice.SinglePlayer:
-                    _autoPlayer = new AutoPlayer(Board.FIELD_WIDTH - 3, Board.HalfFieldHight, _board);
+                    _autoPlayer = new AutoPlayer(_board);
                     UIUtilities.PrintPlayerInstructions(_firstPlayer.Name);
                     mySingleWorker = new Thread(ThreadFunctionForTheBall_AutoPlayer);
                     mySingleWorker.Start();
                     HandlePlayerInput();
                     break;
                 case UserChoice.PVP:
-                    _secondPlayer = new Player(Board.FIELD_WIDTH - 3, Board.HalfFieldHight - 2, _board);
+                    _secondPlayer = new Player(_board);
                     UIUtilities.PrintPlayersInsructions(_firstPlayer.Name, _secondPlayer.Name);
                     mySingleWorker = new Thread(ThreadFunctionForTheBall_PVP);
                     mySingleWorker.Start();
@@ -69,18 +69,13 @@ namespace ConsoleAppPongFinalProject
                 switch (key.Key)
                 {
                     case ConsoleKey.UpArrow:
-                        if (!_board.IsPaddleReachTopBorder(_firstPlayer.YAxis, _firstPlayer.XAxis))
-                        {
-                            _firstPlayer.YAxis--;
-                            _board.ClearBottomPaddleEdge(_firstPlayer.YAxis, _firstPlayer.XAxis);
-                        }
+                        if (!_board.IsPaddleReachTopBorder(_firstPlayer.PointRef))
+                            _firstPlayer.MoveUp();
                         break;
+
                     case ConsoleKey.DownArrow:
-                        if (!_board.IsPaddleReachBottomBorder(_firstPlayer.YAxis, _firstPlayer.XAxis))
-                        {
-                            _firstPlayer.YAxis++;
-                            _board.ClearTopPaddleEdge(_firstPlayer.YAxis, _firstPlayer.XAxis);
-                        }
+                        if (!_board.IsPaddleReachBottomBorder(_firstPlayer.PointRef))
+                            _firstPlayer.MoveDown();
                         break;
                 }
                 _firstPlayer.SetPlayerPosition();
@@ -95,32 +90,23 @@ namespace ConsoleAppPongFinalProject
                 switch (key.Key)
                 {
                     case ConsoleKey.UpArrow:
-                        if (!_board.IsPaddleReachTopBorder(_firstPlayer.YAxis, _firstPlayer.XAxis))
-                        {
-                            _firstPlayer.YAxis--;
-                            _board.ClearBottomPaddleEdge(_firstPlayer.YAxis, _firstPlayer.XAxis);
-                        }
+                        if (!_board.IsPaddleReachTopBorder(_firstPlayer.PointRef))
+                            _firstPlayer.MoveUp();
                         break;
+
                     case ConsoleKey.DownArrow:
-                        if (!_board.IsPaddleReachBottomBorder(_firstPlayer.YAxis, _firstPlayer.XAxis))
-                        {
-                            _firstPlayer.YAxis++;
-                            _board.ClearTopPaddleEdge(_firstPlayer.YAxis, _firstPlayer.XAxis);
-                        }
+                        if (!_board.IsPaddleReachBottomBorder(_firstPlayer.PointRef))
+                            _firstPlayer.MoveDown();
                         break;
+
                     case ConsoleKey.W:
-                        if (!_board.IsPaddleReachTopBorder(_secondPlayer.YAxis, _secondPlayer.XAxis))
-                        {
-                            _secondPlayer.YAxis--;
-                            _board.ClearBottomPaddleEdge(_secondPlayer.YAxis, _secondPlayer.XAxis);
-                        }
+                        if (!_board.IsPaddleReachTopBorder(_secondPlayer.PointRef))
+                            _secondPlayer.MoveUp();
+
                         break;
                     case ConsoleKey.S:
-                        if (!_board.IsPaddleReachBottomBorder(_secondPlayer.YAxis, _secondPlayer.XAxis))
-                        {
-                            _secondPlayer.YAxis++;
-                            _board.ClearTopPaddleEdge(_secondPlayer.YAxis, _secondPlayer.XAxis);
-                        }
+                        if (!_board.IsPaddleReachBottomBorder(_secondPlayer.PointRef))
+                            _secondPlayer.MoveDown();
                         break;
                 }
                 _firstPlayer.SetPlayerPosition();
@@ -129,17 +115,6 @@ namespace ConsoleAppPongFinalProject
             } while (!_isGameOver);
         }
 
-        /// <summary>
-        /// Thread #2 that controls the -ball- and the -auto player-.
-        /// Called if the user has chosen to play as single player.
-        /// Creates a do-while loop.
-        /// Firstly, moves the -auto player- and the -ball- repeatedly along the borders.
-        /// Secondly, checks if there was a goal (ball collided with left/right edge) - if so, checks who scored it (Puts +1 to his score) -> if the score reachs 5 the game has ended.
-        ///                                                                           - if not, continue to the next if statement.         -> if not, resets the ball's and the auto-player's values.
-        /// Thirdly, checks if the ball collided with any of the borders/players - if so, increments the ball's coordinates according to the collision effect.
-        ///                                                                      - if not, moves the ball according to his last coordinates.
-        /// Saves the last icon (so it won't be deleted). Changes the ball -X- and -Y- as needed. Sets the last icon the his previous location. Sets the ball to his new location.
-        /// </summary>
         private void ThreadFunctionForTheBall_AutoPlayer()
         {
             bool isReachTop = false;
@@ -151,12 +126,11 @@ namespace ConsoleAppPongFinalProject
             {
                 _autoPlayer.HandleAIMovement(ref isReachTop);
                 _board.PrintGameField();
-                _ball.IsCollidedWithAnObject(pixel, ref _isFirstPlayerScored, ref _isGoal, _firstPlayer.YAxis, AIY: _autoPlayer.YAxis);
+                _ball.IsCollidedWithAnObject(pixel, ref _isFirstPlayerScored, ref _isGoal, _firstPlayer.PointRef.y, _autoPlayer.PointRef.y);
 
                 if (_isGoal)
                 {
-                    //_autoPlayer.SetAIAtMid();
-                    CheckWhoScored(_isFirstPlayerScored);
+                    UpdateScoreLabel(_isFirstPlayerScored);
                     OnGoalScored(ref pixel);
 
                     if (IsReachMaxGoals(_firstPlayer.Score))
@@ -177,29 +151,19 @@ namespace ConsoleAppPongFinalProject
                     }
                 }
 
-                KeepWantedIcon(pixel);
+                SetIconBackOnBoard(pixel);
+                _board.SetEmptyPixelAtPoint(_ball.PointRef);
                 _ball.IncrementBallMovement();
-                pixel = _board.GameField[_ball.YPosition, _ball.XPosition];
+                pixel = _board.GameField[_ball.PointRef.y, _ball.PointRef.x];
                 _ball.SetBallPosition();
 
             } while (!_isGameOver);
 
-            _board.GameField[_ball.YPosition, _ball.XPosition] = CharacterUtilities.EMPTY_PIXEL;
+            _board.SetEmptyPixelAtPoint(_ball.PointRef);
             _ball.ResetBallValue();
             isReachTop = false;
         }
 
-        /// <summary>
-        /// Thread #3 that controls the -ball-.
-        /// Called if the user has chosen to play as multi player.
-        /// Creates a do-while loop.
-        /// Firstly, moves the -ball- repeatedly along the borders.
-        /// Secondly, checks if there was a goal (ball collided with left/right edge) - if so, checks who scored it (Puts +1 to his score) -> if the score reachs 5 the game has ended.
-        ///                                                                           - if not, continue to the next if statement.         -> if not, resets the ball's and the second player's values.
-        /// Thirdly, checks if the ball collided with any of the borders/players - if so, increments the ball's coordinates according to the collision effect.
-        ///                                                                      - if not, moves the ball according to his last coordinates.
-        /// Saves the last icon (so it won't be deleted). Changes the ball -X- and -Y- as needed. Sets the last icon the his previous location. Sets the ball to his new location.
-        /// </summary>
         private void ThreadFunctionForTheBall_PVP()
         {
             Console.Clear();
@@ -209,11 +173,11 @@ namespace ConsoleAppPongFinalProject
             do
             {
                 _board.PrintGameField();
-                _ball.IsCollidedWithAnObject(pixel, ref _isFirstPlayerScored, ref _isGoal, _firstPlayer.YAxis, secondPlayerY: _secondPlayer.YAxis);
+                _ball.IsCollidedWithAnObject(pixel, ref _isFirstPlayerScored, ref _isGoal, _firstPlayer.PointRef.y, _secondPlayer.PointRef.y);
 
                 if (_isGoal)
                 {
-                    CheckWhoScored(_isFirstPlayerScored);
+                    UpdateScoreLabel(_isFirstPlayerScored);
                     OnGoalScored(ref pixel);
 
                     if (IsReachMaxGoals(_firstPlayer.Score))
@@ -234,9 +198,10 @@ namespace ConsoleAppPongFinalProject
                     }
                 }
 
-                KeepWantedIcon(pixel);
+                _board.SetEmptyPixelAtPoint(_ball.PointRef);
+                SetIconBackOnBoard(pixel);
                 _ball.IncrementBallMovement();
-                pixel = _board.GameField[_ball.YPosition, _ball.XPosition];
+                pixel = _board.GameField[_ball.PointRef.y, _ball.PointRef.x];
                 _ball.SetBallPosition();
 
             } while (!_isGameOver);
@@ -246,7 +211,7 @@ namespace ConsoleAppPongFinalProject
 
         private void OnGoalScored(ref char pixel)
         {
-            _board.GameField[_ball.YPosition, _ball.XPosition] = pixel;
+            _board.GameField[_ball.PointRef.y, _ball.PointRef.x] = pixel;
             pixel = CharacterUtilities.EMPTY_PIXEL;
             _ball.SetBallInconsistently();
             _isGoal = false;
@@ -255,14 +220,12 @@ namespace ConsoleAppPongFinalProject
 
         private bool IsReachMaxGoals(int currentGoals) => currentGoals == GOALS_TO_REACH;
 
-        //Score method for the first player aginst the computer.
-        private void CheckWhoScored(bool isFirstPlayerScored)
+        private void UpdateScoreLabel(bool isFirstPlayerScored)
         {
             if (isFirstPlayerScored)
             {
                 _firstPlayer.IncreaseScoreByOne();
                 PrintScore(_firstPlayer.Score, location: 0);
-                return;
             }
             else if (UserChoice == UserChoice.PVP)
             {
@@ -276,23 +239,13 @@ namespace ConsoleAppPongFinalProject
             }
         }
 
-        
-        //Sets back the last icon that the ball has deleted.
-        private void KeepWantedIcon(char temp)
+        private void SetIconBackOnBoard(char temp)
         {
-
             if (temp == CharacterUtilities.PLAYER_ICON)
-            {
-                _board.GameField[_ball.YPosition, _ball.XPosition] = temp;
-                return;
-            }
+                _board.GameField[_ball.PointRef.y, _ball.PointRef.x] = temp;
+
             else if (temp == CharacterUtilities.TOP_BOTTOM_BORDER_ICON)
-            {
-                _board.GameField[_ball.YPosition, _ball.XPosition] = temp;
-                return;
-            }
-            else
-                _board.GameField[_ball.YPosition, _ball.XPosition] = CharacterUtilities.EMPTY_PIXEL;
+                _board.GameField[_ball.PointRef.y, _ball.PointRef.x] = temp;
         }
 
         private void PrintScore(int currentScore, int location) => _scoreboard.PrintScore(currentScore, location);
