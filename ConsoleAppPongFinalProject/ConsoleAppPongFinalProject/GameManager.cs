@@ -34,15 +34,13 @@ namespace ConsoleAppPongFinalProject
         {
             _board = new Board();
             _ball = new Ball(_board);
-            _scoreBoard = new ScoreDisplayHandler();
             _ = new MainMenu();
+            UIUtilities.ClearTitles();
             _firstPlayer = new Player(_board);
         }
 
         private void SetGameMode()
         {
-            UIUtilities.ClearTitles();
-
             Thread mySingleWorker;
             InputHandler inputHandler = new InputHandler(_board);
 
@@ -51,6 +49,7 @@ namespace ConsoleAppPongFinalProject
                 case GameMode.SinglePlayer:
                     _autoPlayer = new AutoPlayer(_board);
                     UIUtilities.PrintPlayerInstructions(_firstPlayer.PlayerDataRef.Name);
+                    _scoreBoard = new ScoreDisplayHandler();
                     mySingleWorker = new Thread(ThreadFunctionBall_AutoPlayer);
                     mySingleWorker.Start();
                     inputHandler.HandlePlayersInput(_firstPlayer, null);
@@ -58,6 +57,7 @@ namespace ConsoleAppPongFinalProject
                 case GameMode.PVP:
                     _secondPlayer = new Player(_board);
                     UIUtilities.PrintPlayersInsructions(_firstPlayer.PlayerDataRef.Name, _secondPlayer.PlayerDataRef.Name);
+                    _scoreBoard = new ScoreDisplayHandler();
                     mySingleWorker = new Thread(ThreadFunctionBall_PVP);
                     mySingleWorker.Start();
                     inputHandler.HandlePlayersInput(_firstPlayer, _secondPlayer);
