@@ -66,6 +66,14 @@ namespace ConsoleAppPongFinalProject
             } while (!isPressed);
         }
 
+        private void MainMenuInstructions()
+        {
+            Console.SetCursorPosition(0, 27);
+            Console.WriteLine("Use the -UpArrow- and the -DownArrow- keys to navigate or the -Escape- key to exit.");
+            Console.SetCursorPosition(0, 28);
+            Console.WriteLine("Use the -Enter- key to choose.");
+        }
+
         private void SetMainMenuCursor(int leftForCursor, int topForCursor)
         {
             ClearOldCursorCopies();
@@ -82,14 +90,6 @@ namespace ConsoleAppPongFinalProject
                 Console.SetCursorPosition(22, i);
                 Console.Write("\t  ");
             }
-        }
-
-        private void MainMenuInstructions()
-        {
-            Console.SetCursorPosition(0, 27);
-            Console.WriteLine("Use the -UpArrow- and the -DownArrow- keys to navigate or the -Escape- key to exit.");
-            Console.SetCursorPosition(0, 28);
-            Console.WriteLine("Use the -Enter- key to choose.");
         }
     }
 }

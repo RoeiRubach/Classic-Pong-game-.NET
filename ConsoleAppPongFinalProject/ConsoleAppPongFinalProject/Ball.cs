@@ -18,110 +18,83 @@ namespace ConsoleAppPongFinalProject
             SetBallPosition();
         }
 
-        public void SetBallPosition()
-        {
-            _board.GameField[_point.y, _point.x] = CharacterUtilities.BALL_ICON;
-        }
+        public void SetBallPosition() => _board.GameField[_point.Y, _point.X] = CharacterUtilities.BALL_ICON;
 
         public void IncrementBallMovement() => _point += _velocity;
 
-        public void SetBallInconsistently()
+        public void SpawnBallRandomPosition()
         {
-            //Spawns the ball at Inconsistently coordinates.
-            _point.y = RandomNumer() + RandomNumer() + RandomNumer() + RandomNumer() + Board.HalfFieldHight;
-            _point.x = 2 + RandomNumer() + Board.HalfFieldWidth;
-            _velocity.y = RandomNumer();
+            _point.Y = GetRandomPosition() + Board.HalfFieldHight;
+            _point.X = GetRandomDirection() + Board.HalfFieldWidth;
+            _velocity.Y = GetRandomDirection();
 
             if (GameManager.GameMode == GameMode.PVP)
-                _velocity.x *= -1;
+                _velocity.X *= -1;
             else
-                _velocity.x = -1;
+                _velocity.X = -1;
 
             SetBallPosition();
         }
 
-        public void ResetBallValue()
-        {
-            _point.SetCenter();
-            SetBallPosition();
-        }
-
-        //A random value for the ball starting position.
-        private int RandomNumer()
+        private int GetRandomPosition()
         {
             Random rnd = new Random();
-            int horizontalOrVertical = rnd.Next(0, 3);
-
-            if (horizontalOrVertical == 0)
-                horizontalOrVertical = -1;
-
-            else if (horizontalOrVertical == 1)
-                horizontalOrVertical = 0;
-
-            else
-                horizontalOrVertical = 1;
-
-            return horizontalOrVertical;
+            return rnd.Next(0, 5);
         }
 
-        public void IsCollidedWithAnObject(char currentPixel, ref bool isFirstPlayerScored, ref bool isGoal, int firstPaddleY, int secondPaddleY)
+        private int GetRandomDirection()
+        {
+            Random rnd = new Random();
+            return rnd.Next(-1, 2);
+        }
+
+        public void CheckCollision(char currentPixel, ref bool isFirstPlayerScored, ref bool isGoal, Point firstPlayer, Point secondPlayer)
         {
             if (currentPixel == CharacterUtilities.PLAYER_ICON)
-            {
-                PaddleEdge collidedWithBall = PaddleEdge.None;
-                WhichPaddleEdgeCollidedWithBall(ref collidedWithBall, firstPaddleY, secondPaddleY);
-
-                switch (collidedWithBall)
-                {
-                    case PaddleEdge.UpperEdge:
-                        _velocity.y = -1;
-                        break;
-                    case PaddleEdge.MiddleEdge:
-                        _velocity.y = 0;
-                        break;
-                    case PaddleEdge.BottomEdge:
-                        _velocity.y = 1;
-                        break;
-                }
-                _velocity.x *= -1;
-            }
+                HandlePaddleCollision(firstPlayer, secondPlayer);
 
             else if (currentPixel == CharacterUtilities.TOP_BOTTOM_BORDER_ICON)
-                _velocity.y *= (-1);
+                _velocity.Y *= (-1);
 
             else if (currentPixel == CharacterUtilities.LEFT_RIGHT_BORDER_ICON)
-            {
-                if (_point.x >= 89)
-                    isFirstPlayerScored = true;
-                else
-                    isFirstPlayerScored = false;
-
-                isGoal = true;
-            }
+                HandleGoalScored(out isFirstPlayerScored, out isGoal);
         }
 
-        private void WhichPaddleEdgeCollidedWithBall(ref PaddleEdge collidedWithBall, int firstPlayerY, int secondPlayerY)
+        private void HandlePaddleCollision(Point firstPlayer, Point secondPlayer)
         {
-            int firstPlayerPaddlePart = firstPlayerY;
-            int secondPlayerPaddlePart = secondPlayerY;
+            PaddleEdge collidedWithBall = PaddleEdge.None;
+            WhichPaddleEdgeCollidedWithBall(ref collidedWithBall, firstPlayer, secondPlayer);
 
+            switch (collidedWithBall)
+            {
+                case PaddleEdge.UpperEdge:
+                    _velocity.Y = -1;
+                    break;
+                case PaddleEdge.MiddleEdge:
+                    _velocity.Y = 0;
+                    break;
+                case PaddleEdge.BottomEdge:
+                    _velocity.Y = 1;
+                    break;
+            }
+            _velocity.X *= -1;
+        }
+
+        private void WhichPaddleEdgeCollidedWithBall(ref PaddleEdge collidedWithBall, Point firstPlayer, Point secondPlayer)
+        {
             for (int i = 0; i < 5; i++)
             {
-                if (FoundHittedPart(firstPlayerPaddlePart, secondPlayerPaddlePart))
+                Point first = new Point(firstPlayer.X, firstPlayer.Y + i);
+                Point second = new Point(secondPlayer.X + i, secondPlayer.Y);
+                if (FoundHittedPart(first, second))
                 {
                     GetCollidedPaddleEdge(ref collidedWithBall, i);
                     break;
                 }
-                secondPlayerPaddlePart++;
-                firstPlayerPaddlePart++;
             }
         }
 
-        private bool FoundHittedPart(int firstPlayerPaddlePart, int secondPlayerPaddlePart)
-        {
-            return _board.IsPointsAreEqual(firstPlayerPaddlePart, Board.FirstPlayerXPosition, _point) ||
-                                _board.IsPointsAreEqual(secondPlayerPaddlePart, Board.SecondPlayerXPosition, _point);
-        }
+        private bool FoundHittedPart(Point a, Point b) => a == _point || b == _point;
 
         private void GetCollidedPaddleEdge(ref PaddleEdge collidedWithBall, int i)
         {
@@ -131,6 +104,16 @@ namespace ConsoleAppPongFinalProject
                 collidedWithBall = PaddleEdge.MiddleEdge;
             else
                 collidedWithBall = PaddleEdge.BottomEdge;
+        }
+
+        private void HandleGoalScored(out bool isFirstPlayerScored, out bool isGoal)
+        {
+            if (_point.X >= 89)
+                isFirstPlayerScored = true;
+            else
+                isFirstPlayerScored = false;
+
+            isGoal = true;
         }
     }
 }

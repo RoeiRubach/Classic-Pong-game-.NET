@@ -2,33 +2,26 @@
 {
     class AutoPlayer : Player
     {
+        private bool _isReachTop;
+
         public AutoPlayer(Board board) : base(board)
         {
         }
 
-        public void HandleAIMovement(ref bool isReachTop)
+        public void HandleAIMovement()
         {
-            if (!board.IsPaddleReachTopBorder(point) && (!isReachTop))
+            if (!board.IsPaddleReachTopBorder(point) && (!_isReachTop))
                 MoveUp();
 
             else if (!board.IsPaddleReachBottomBorder(point))
             {
-                isReachTop = true;
+                _isReachTop = true;
                 MoveDown();
             }
             else
-                isReachTop = false;
+                _isReachTop = false;
 
             SetPosition();
-        }
-
-        private void EraseAILeftovers(char[,] gameField)
-        {
-            for (int i = 1; i < 22; i++)
-            {
-                for (int j = 87; j <= 87; j++)
-                    gameField[i, j] = CharacterUtilities.EMPTY_PIXEL;
-            }
         }
     }
 }

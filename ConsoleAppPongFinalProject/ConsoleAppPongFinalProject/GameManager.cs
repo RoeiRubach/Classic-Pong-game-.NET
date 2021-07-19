@@ -5,7 +5,7 @@ namespace ConsoleAppPongFinalProject
 {
     class GameManager
     {
-        public const int GOALS_TO_REACH = 2;
+        public const int GOALS_TO_REACH = 5;
         public static GameMode GameMode = GameMode.None;
         public static bool IsGameOver = false;
 
@@ -18,12 +18,7 @@ namespace ConsoleAppPongFinalProject
 
         private bool _isGoal = false;
         private bool _isFirstPlayerScored = false;
-
-        public GameManager()
-        {
-            _board = new Board();
-            _ball = new Ball(_board);
-        }
+        private char _lastPixel = CharacterUtilities.EMPTY_PIXEL;
 
         public void Start()
         {
@@ -31,17 +26,25 @@ namespace ConsoleAppPongFinalProject
             Console.CursorVisible = false;
             Console.ForegroundColor = ConsoleColor.White;
 
+            InitializeInstances();
             SetGameMode();
+        }
+
+        private void InitializeInstances()
+        {
+            _board = new Board();
+            _ball = new Ball(_board);
+            _scoreBoard = new ScoreDisplayHandler();
+            _ = new MainMenu();
+            _firstPlayer = new Player(_board);
         }
 
         private void SetGameMode()
         {
-            MainMenu mainMenu = new MainMenu();
             UIUtilities.ClearTitles();
 
-            _firstPlayer = new Player(_board);
             Thread mySingleWorker;
-            InputHandler inputHandler;
+            InputHandler inputHandler = new InputHandler(_board);
 
             switch (GameMode)
             {
@@ -50,7 +53,6 @@ namespace ConsoleAppPongFinalProject
                     UIUtilities.PrintPlayerInstructions(_firstPlayer.PlayerDataRef.Name);
                     mySingleWorker = new Thread(ThreadFunctionBall_AutoPlayer);
                     mySingleWorker.Start();
-                    inputHandler = new InputHandler(_board);
                     inputHandler.HandlePlayersInput(_firstPlayer, null);
                     break;
                 case GameMode.PVP:
@@ -58,10 +60,10 @@ namespace ConsoleAppPongFinalProject
                     UIUtilities.PrintPlayersInsructions(_firstPlayer.PlayerDataRef.Name, _secondPlayer.PlayerDataRef.Name);
                     mySingleWorker = new Thread(ThreadFunctionBall_PVP);
                     mySingleWorker.Start();
-                    inputHandler = new InputHandler(_board);
                     inputHandler.HandlePlayersInput(_firstPlayer, _secondPlayer);
                     break;
             }
+            Console.Clear();
         }
 
         private void OnGameOver()
@@ -78,64 +80,55 @@ namespace ConsoleAppPongFinalProject
 
         private void ThreadFunctionBall_AutoPlayer()
         {
-            bool isReachTop = false;
-            Console.Clear();
-            char pixel = CharacterUtilities.EMPTY_PIXEL;
-            _scoreBoard = new ScoreDisplayHandler();
-
             do
             {
-                _autoPlayer.HandleAIMovement(ref isReachTop);
+                _autoPlayer.HandleAIMovement();
                 _board.PrintGameField();
-
                 if (_isGoal)
                 {
                     UpdateScoreLabel(_isFirstPlayerScored, _autoPlayer);
-                    OnGoalScored(ref pixel);
+                    OnGoalScored();
                 }
-                UpdateFrame(ref pixel);
-                _ball.IsCollidedWithAnObject(pixel, ref _isFirstPlayerScored, ref _isGoal, _firstPlayer.PointRef.y, _autoPlayer.PointRef.y);
-
+                else
+                {
+                    UpdateFrame();
+                    _ball.CheckCollision(_lastPixel, ref _isFirstPlayerScored, ref _isGoal, _firstPlayer.PointRef, _autoPlayer.PointRef);
+                }
             } while (!IsGameOver);
         }
 
         private void ThreadFunctionBall_PVP()
         {
-            Console.Clear();
-            char pixel = CharacterUtilities.EMPTY_PIXEL;
-            _scoreBoard = new ScoreDisplayHandler();
-
             do
             {
-
+                _board.PrintGameField();
                 if (_isGoal)
                 {
                     UpdateScoreLabel(_isFirstPlayerScored, _secondPlayer);
-                    OnGoalScored(ref pixel);
+                    OnGoalScored();
                 }
                 else
-                    _board.PrintGameField();
-
-                UpdateFrame(ref pixel);
-                _ball.IsCollidedWithAnObject(pixel, ref _isFirstPlayerScored, ref _isGoal, _firstPlayer.PointRef.y, _secondPlayer.PointRef.y);
-
+                {
+                    UpdateFrame();
+                    _ball.CheckCollision(_lastPixel, ref _isFirstPlayerScored, ref _isGoal, _firstPlayer.PointRef, _secondPlayer.PointRef);
+                }
             } while (!IsGameOver);
         }
 
-        private void UpdateFrame(ref char pixel)
+        private void UpdateFrame()
         {
             _board.SetEmptyPixelAtPoint(_ball.PointRef);
-            SetIconBackOnBoard(pixel);
+            SetIconBackOnBoard();
             _ball.IncrementBallMovement();
-            pixel = _board.GameField[_ball.PointRef.y, _ball.PointRef.x];
+            _lastPixel = _board.GameField[_ball.PointRef.Y, _ball.PointRef.X];
             _ball.SetBallPosition();
         }
 
-        private void OnGoalScored(ref char pixel)
+        private void OnGoalScored()
         {
-            _board.GameField[_ball.PointRef.y, _ball.PointRef.x] = pixel;
-            pixel = CharacterUtilities.EMPTY_PIXEL;
-            _ball.SetBallInconsistently();
+            _board.GameField[_ball.PointRef.Y, _ball.PointRef.X] = _lastPixel;
+            _lastPixel = CharacterUtilities.EMPTY_PIXEL;
+            _ball.SpawnBallRandomPosition();
             _isGoal = false;
             Thread.Sleep(1300);
         }
@@ -154,13 +147,13 @@ namespace ConsoleAppPongFinalProject
             }
         }
 
-        private void SetIconBackOnBoard(char temp)
+        private void SetIconBackOnBoard()
         {
-            if (temp == CharacterUtilities.PLAYER_ICON)
-                _board.GameField[_ball.PointRef.y, _ball.PointRef.x] = temp;
+            if (_lastPixel == CharacterUtilities.PLAYER_ICON)
+                _board.GameField[_ball.PointRef.Y, _ball.PointRef.X] = _lastPixel;
 
-            else if (temp == CharacterUtilities.TOP_BOTTOM_BORDER_ICON)
-                _board.GameField[_ball.PointRef.y, _ball.PointRef.x] = temp;
+            else if (_lastPixel == CharacterUtilities.TOP_BOTTOM_BORDER_ICON)
+                _board.GameField[_ball.PointRef.Y, _ball.PointRef.X] = _lastPixel;
         }
 
         private void PrintScore(int currentScore, int location) => _scoreBoard.PrintScore(currentScore, location);

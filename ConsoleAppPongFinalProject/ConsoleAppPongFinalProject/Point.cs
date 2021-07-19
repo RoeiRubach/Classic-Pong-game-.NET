@@ -7,8 +7,8 @@ namespace ConsoleAppPongFinalProject
     {
         static class MethodImplOptionsEx { public const short AggressiveInlining = 256; }
 
-        public int x;
-        public int y;
+        public int X;
+        public int Y;
 
         public int this[int index]
         {
@@ -16,8 +16,8 @@ namespace ConsoleAppPongFinalProject
             {
                 switch (index)
                 {
-                    case 0: return x;
-                    case 1: return y;
+                    case 0: return X;
+                    case 1: return Y;
                     default:
                         throw new IndexOutOfRangeException("Invalid Vector2 index!");
                 }
@@ -27,35 +27,58 @@ namespace ConsoleAppPongFinalProject
             {
                 switch (index)
                 {
-                    case 0: x = value; break;
-                    case 1: y = value; break;
+                    case 0: X = value; break;
+                    case 1: Y = value; break;
                     default:
                         throw new IndexOutOfRangeException("Invalid Vector2 index!");
                 }
             }
         }
 
-        public Point(int x, int y) { this.x = x; this.y = y; }
+        public Point(int x, int y) { this.X = x; this.Y = y; }
 
         public void SetCenter()
         {
-            x = Board.HalfFieldWidth;
-            y = Board.HalfFieldHight;
+            X = Board.HalfFieldWidth;
+            Y = Board.HalfFieldHight;
         }
 
         public void SetFirstPaddlePosition()
         {
-            x = Board.FirstPlayerXPosition;
-            y = Board.HalfFieldHight - 2;
+            X = Board.FirstPlayerXPosition;
+            Y = Board.HalfFieldHight - 2;
         }
 
         public void SetSecondPaddlePosition()
         {
-            x = Board.SecondPlayerXPosition;
-            y = Board.HalfFieldHight - 2;
+            X = Board.SecondPlayerXPosition;
+            Y = Board.HalfFieldHight - 2;
+        }
+
+        public override int GetHashCode() { return X.GetHashCode() ^ (Y.GetHashCode() << 2); }
+
+        public override bool Equals(object other)
+        {
+            if (!(other is Point)) return false;
+
+            return Equals((Point)other);
         }
 
         [MethodImpl(MethodImplOptionsEx.AggressiveInlining)]
-        public static Point operator +(Point a, Point b) { return new Point(a.x + b.x, a.y + b.y); }
+        public static Point operator +(Point a, Point b) { return new Point(a.X + b.X, a.Y + b.Y); }
+
+        [MethodImpl(MethodImplOptionsEx.AggressiveInlining)]
+        public static bool operator ==(Point lhs, Point rhs)
+        {
+            float diff_x = lhs.X - rhs.X;
+            float diff_y = lhs.Y - rhs.Y;
+            return (diff_x * diff_x + diff_y * diff_y) < kEpsilon * kEpsilon;
+        }
+
+        [MethodImpl(MethodImplOptionsEx.AggressiveInlining)]
+        public static bool operator !=(Point lhs, Point rhs) { return !(lhs == rhs); }
+
+        public const float kEpsilon = 0.00001F;
+        public const float kEpsilonNormalSqrt = 1e-15f;
     }
 }

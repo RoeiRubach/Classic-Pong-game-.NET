@@ -19,7 +19,7 @@ namespace ConsoleAppPongFinalProject
             _playersCount++;
             if (_playersCount > 2)
                 _playersCount = 1;
-            HandlePlayerSetPosition();
+            HandlePositionOnStart();
             InitializePlayer(board);
         }
 
@@ -33,14 +33,14 @@ namespace ConsoleAppPongFinalProject
 
         public void MoveUp()
         {
-            point.y--;
+            point.Y--;
             board.ClearBottomPaddleAfterStep(point);
             SetPosition();
         }
 
         public void MoveDown()
         {
-            point.y++;
+            point.Y++;
             board.ClearTopPaddleAfterStep(point);
             SetPosition();
         }
@@ -48,10 +48,10 @@ namespace ConsoleAppPongFinalProject
         public void IncreaseScoreByOne()
         {
             playerData.Score++;
-            CheckForGameOver();
+            CheckGameOver();
         }
 
-        private void CheckForGameOver()
+        private void CheckGameOver()
         {
             if (playerData.Score == GameManager.GOALS_TO_REACH)
             {
@@ -67,11 +67,11 @@ namespace ConsoleAppPongFinalProject
 
         protected void SetPosition()
         {
-            for (int i = point.y; i < point.y + 5; i++)
-                board.GameField[i, point.x] = CharacterUtilities.PLAYER_ICON;
+            for (int i = point.Y; i < point.Y + 5; i++)
+                board.GameField[i, point.X] = CharacterUtilities.PLAYER_ICON;
         }
 
-        private void HandlePlayerSetPosition()
+        private void HandlePositionOnStart()
         {
             point = new Point();
             point.SetSecondPaddlePosition();
