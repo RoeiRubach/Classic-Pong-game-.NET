@@ -24,6 +24,9 @@ current date: 09-NOV-18
 
 C# :v:
 
+## Gameplay
+![Gameplay](https://user-images.githubusercontent.com/44708223/126218449-0ec71fc5-c05e-4816-88e4-f00855ac8656.gif)
+
 ## Screenshots
 
 ![pong - main menu](https://user-images.githubusercontent.com/44708223/48136691-f229aa00-e2a8-11e8-94f5-d17a298d644e.png)
@@ -36,7 +39,7 @@ Visual Studio 2017 - ConsoleApp (.NET Framework) :boom:
 
 ## Code Example
 
-![pong - code example](https://user-images.githubusercontent.com/44708223/48276087-d57ba680-e44f-11e8-9390-ca20f15a4c20.png)
+![CodeExample](https://user-images.githubusercontent.com/44708223/126216808-746d4e8d-1913-43e2-9bdc-5b7888adb749.png)
 
 ## Credits
 
